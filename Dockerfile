@@ -10,6 +10,9 @@ ENV PYTHONFAULTHANDLER=1 \
 
 WORKDIR /app
 
+RUN apk upgrade --no-cache && \
+    apk add --no-cache libgcc
+
 RUN pip install "poetry==$POETRY_VERSION"
 
 COPY . .
