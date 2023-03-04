@@ -1,0 +1,18 @@
+[tool.poetry]
+name = "starship-command"
+version = "0.1.0"
+description = "The REST API server of the game"
+authors = ["Mark Meliksetyan <markmelix@gmail.com>", "Anton Grishin <anton.ingrish@gmail.com>"]
+license = "GPL-3.0-or-later"
+readme = "README.md"
+packages = [{include = "starship"}]
+
+[tool.poetry.dependencies]
+python = "^3.10"
+Flask = "^2.2.3"
+mysql-connector-python = "^8.0.32"
+
+
+[build-system]
+requires = ["poetry-core>=1.4.0"]
+build-backend = "poetry.core.masonry.api"
