@@ -1,12 +1,6 @@
 .DS_Store
 .idea
 *.log
-tmp/
-
 *.py[cod]
-*.egg
-build
-htmlcov
-
-.docker
+.secrets
 poetry.lock

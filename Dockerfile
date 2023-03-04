@@ -22,4 +22,4 @@ RUN poetry config virtualenvs.create false \
 
 
 CMD ["poetry", "run", "python", "./starship/__init__.py"]
-EXPOSE 5000
+EXPOSE ${SERVER_PORT}
