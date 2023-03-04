@@ -4,15 +4,17 @@ services:
     restart: always
     environment:
       MYSQL_DATABASE: starship
-      MYSQL_ROOT_PASSWORD: secret
+      MYSQL_ROOT_PASSWORD_FILE: /run/secrets/mysql_root_password
     # NOTE: use of "mysql_native_password" is not recommended:
     # https://dev.mysql.com/doc/refman/8.0/en/upgrading-from-previous-series.html#upgrade-caching-sha2-password
     # (this is just an example, not intended to be a production configuration)
     command: --default-authentication-plugin=mysql_native_password
     volumes:
-      - .docker_data/mysql:/var/lib/mysql
+      - mysql:/var/lib/mysql
     ports:
       - 3306:3306
+    secrets:
+      - source: mysql_root_password
 
   server:
     build:
@@ -21,10 +23,15 @@ services:
     ports:
       - 80:80
     environment:
-      MYSQL_HOST: mysql
-      MYSQL_USER: root
-      MYSQL_PASSWORD: secret
+      MYSQL_HOST: mysqldb
+      MYSQL_ROOT_PASSWORD_FILE: /run/secrets/mysql_root_password
       MYSQL_DB: starship
+    secrets:
+      - source: mysql_root_password
 
 volumes:
-  ".docker_data":
+  mysql:
+
+secrets:
+      mysql_root_password:
+        file: .docker/mysql_root_password

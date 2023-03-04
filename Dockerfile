@@ -13,12 +13,12 @@ WORKDIR /app
 RUN apk upgrade --no-cache && \
     apk add --no-cache libgcc
 
-RUN pip install "poetry==$POETRY_VERSION"
+RUN pip install --no-cache-dir "poetry==$POETRY_VERSION"
 
 COPY . .
 
 RUN poetry config virtualenvs.create false \
-  && poetry install --no-interaction --no-ansi
+  && poetry install --no-cache --no-interaction --no-ansi
 
 
 CMD ["poetry", "run", "python", "./starship/__init__.py"]

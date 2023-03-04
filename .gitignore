@@ -8,5 +8,5 @@ tmp/
 build
 htmlcov
 
-.docker_data
+.docker
 poetry.lock
