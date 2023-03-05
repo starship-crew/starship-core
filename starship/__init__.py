@@ -1,14 +1,9 @@
 import os
 from flask import Flask
+from db import connector
 
 
 app = Flask(__name__)
-
-
-@app.route("/")
-def index():
-    return ""
-
 
 if __name__ == "__main__":
     import pyruvate
