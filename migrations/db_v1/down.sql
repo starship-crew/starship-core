@@ -1,1 +1,1 @@
-DROP DATABASE starship_db;
+DROP DATABASE starship;

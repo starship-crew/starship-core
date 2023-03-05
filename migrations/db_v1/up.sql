@@ -1,8 +1,8 @@
-CREATE DATABASE starship_db;
+CREATE DATABASE starship;
 
 
--- все экипажи зарегестрированные в системе
-CREATE TABLE crews (
+-- all crews registered in the system
+CREATE TABLE crews IF NOT EXISTS (
   token string TINYTEXT PRIMARY KEY, 
   name TINYTEXT UIQUE,
   ship INT, 
@@ -10,14 +10,14 @@ CREATE TABLE crews (
   FOREIGN KEY (ship) REFERENCES ships (id)
 );
 
--- все корабли зарегестрированные в системе
-CREATE TABLE ships (
+-- all ships registered in the system
+CREATE TABLE ships IF NOT EXISTS (
   id INT PRIMARY KEY,
   shame TINYTEXT
 )
 
--- все детали существующие в игре
-CREATE TABLE dateil_copies (
+-- all the details that exist in the game
+CREATE TABLE detail_copies IF NOT EXISTS (
   id INT PRIMARY KEY, 
   ship INT, 
   kind INT,
@@ -26,8 +26,8 @@ CREATE TABLE dateil_copies (
   FOREIGN KEY (kind) REFERENCES details (id)
 )
 
--- абстрактные детали
-CREATE TABLE datails (
+-- abstract details
+CREATE TABLE details IF NOT EXISTS (
   id INT PRIMARY KEY, 
   kind INT, 
   cost INT NOT NULL,
@@ -45,8 +45,8 @@ CREATE TABLE datails (
   FOREIGN KEY (description) REFERENCES sentences (id)
 )
 
--- типы деталей
-CREATE TABLE detail_types(
+-- types of details
+CREATE TABLE detail_types IF NOT EXISTS (
   id INT PRIMARY KEY, 
   name INT, 
   description INT,
@@ -55,15 +55,15 @@ CREATE TABLE detail_types(
   FOREIGN KEY (description) REFERENCES sentences (id)
 )
 
--- предложения на разных языках
-CREATE TABLE sentences (
+-- sentences in different languages
+CREATE TABLE sentences IF NOT EXISTS (
   id INT, 
   en TEXT,
   ru TEXT
 )
 
--- Обязательный набор деталей для коробля
- CREATE TABLE required_ship_details (
+-- Obligatory set of parts for a ship
+ CREATE TABLE required_ship_details IF NOT EXISTS (
   detail_types INT,
 
   FOREIGN KEY (detail_types) REFERENCES detail_types (id)
