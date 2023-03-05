@@ -1,13 +1,8 @@
-import os
-from flask import Flask
-from db import connector
-
-
-app = Flask(__name__)
-
 if __name__ == "__main__":
+    import os
     import pyruvate
 
+    from app import app
     from dotenv import load_dotenv
 
     load_dotenv()
