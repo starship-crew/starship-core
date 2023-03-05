@@ -27,3 +27,30 @@ def connect():
         password=get_mysql_password(),
         database=MYSQL_DATABASE,
     )
+
+
+_connection = None
+
+
+def connector(func):
+    def with_connection(*args, **kwargs):
+        from mysql.connector import Error
+
+        if _connection:
+            con = _connection
+        else:
+            con = connect()
+
+        try:
+            func_result = func(con, *args, **kwargs)
+        except Error as error:
+            con.rollback()
+            raise error
+        else:
+            con.commit()
+        finally:
+            con.close()
+
+        return func_result
+
+    return with_connection
