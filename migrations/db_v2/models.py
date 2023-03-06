@@ -85,3 +85,6 @@ class RequiredShipDetail(Base):
     detail_types = Column(Integer, ForeignKey("detail_types.id"))
 
     detal_types = relationship("DetailType")
+
+
+Base.metadata.create_all(engine)
