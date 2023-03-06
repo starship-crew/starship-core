@@ -41,7 +41,7 @@ CREATE TABLE details IF NOT EXISTS (
   description INT,
 
   FOREIGN KEY (kind) REFERENCES detail_types (id),
-  FOREIGN KEY (name) REFERENCES sentences (id,
+  FOREIGN KEY (name) REFERENCES sentences (id),
   FOREIGN KEY (description) REFERENCES sentences (id)
 )
 
@@ -57,7 +57,7 @@ CREATE TABLE detail_types IF NOT EXISTS (
 
 -- sentences in different languages
 CREATE TABLE sentences IF NOT EXISTS (
-  id INT, 
+  id INT PRIMARY KEY, 
   en TEXT,
   ru TEXT
 )
