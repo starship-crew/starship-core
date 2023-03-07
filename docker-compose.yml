@@ -10,6 +10,8 @@ services:
       - 3306:3306
     secrets:
       - source: mysql_root_password
+    networks:
+      - default
 
   server:
     build:
@@ -21,6 +23,8 @@ services:
       - source: mysql_root_password
       - source: secret_key
     restart: on-failure
+    networks:
+      - default
 
 
 volumes:
@@ -31,3 +35,7 @@ secrets:
         file: .secrets/mysql_root_password
       secret_key:
         file: .secrets/secret_key
+
+networks:
+  default:
+    driver: bridge
