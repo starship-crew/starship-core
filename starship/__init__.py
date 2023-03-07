@@ -18,6 +18,8 @@ def get_secret_key():
 
 
 def make_app():
+    import models as _
+
     app = Flask(__name__)
 
     app.config["SECRET_KEY"] = get_secret_key()
