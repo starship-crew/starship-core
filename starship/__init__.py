@@ -1,16 +1,37 @@
-if __name__ == "__main__":
-    from app import app
-    from dotenv import load_dotenv
+import os
 
-    import os
-    import pyruvate
+from flask import Flask
+from flask_login import LoginManager
+from flask_sqlalchemy import SQLAlchemy
 
-    import admin, api
+import dbhelper
+from admin import admin_bp
+from api import api_bp
 
-    load_dotenv()
+db = SQLAlchemy()
+login_manager = LoginManager()
 
-    SERVER_FALLBACK_PORT = 80
-    SERVER_PORT = os.getenv("SERVER_PORT", SERVER_FALLBACK_PORT)
-    WORKERS = 2
 
-    pyruvate.serve(app, f"0.0.0.0:{SERVER_PORT}", WORKERS)
+def get_secret_key():
+    with open(os.getenv("SECRET_KEY_FILE", "/run/secrets/secret_key")) as file:
+        return file.read().rstrip()
+
+
+def make_app():
+    app = Flask(__name__)
+
+    app.config["SECRET_KEY"] = get_secret_key()
+    app.config["SQLALCHEMY_DATABASE_URI"] = dbhelper.get_url()
+
+    db.init_app(app)
+    login_manager.init_app(app)
+
+    with app.app_context():
+        app.register_blueprint(admin_bp)
+        app.register_blueprint(api_bp)
+
+        db.create_all()
+
+    print("Application was created successfully")
+
+    return app

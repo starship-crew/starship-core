@@ -1,7 +1,8 @@
+version: "3"
+
 services:
-  mysqldb:
+  db:
     image: mysql:8.0
-    restart: always
     env_file: .env
     volumes:
       - mysql:/var/lib/mysql
@@ -13,12 +14,14 @@ services:
   server:
     build:
       context: .
-    restart: always
     env_file: .env
     ports:
       - ${SERVER_PORT}:${FORWARDED_PORT}
     secrets:
       - source: mysql_root_password
+      - source: secret_key
+    restart: on-failure
+
 
 volumes:
   mysql:
@@ -26,3 +29,5 @@ volumes:
 secrets:
       mysql_root_password:
         file: .secrets/mysql_root_password
+      secret_key:
+        file: .secrets/secret_key

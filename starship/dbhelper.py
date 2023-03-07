@@ -54,3 +54,7 @@ def connector(func):
         return func_result
 
     return with_connection
+
+
+def get_url():
+    return f"mysql+pymysql://{MYSQL_USER}:{get_mysql_password()}@{MYSQL_HOST}:3306/{MYSQL_DATABASE}"

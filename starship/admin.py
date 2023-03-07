@@ -1,6 +1,9 @@
-from app import app
+from flask import Blueprint
 
 
-@app.route("/admin")
+admin_bp = Blueprint("admin_bp", __name__, url_prefix="/dashboard")
+
+
+@admin_bp.route("/")
 def admin():
-    return "Admin Panel"
+    return {"status": "ok"}

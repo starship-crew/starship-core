@@ -11,15 +11,15 @@ ENV PYTHONFAULTHANDLER=1 \
 WORKDIR /app
 
 RUN apk upgrade --no-cache && \
-    apk add --no-cache libgcc
+    apk add --no-cache libgcc gcc musl-dev mariadb-connector-c-dev bind-tools
 
 RUN pip install --no-cache-dir "poetry==$POETRY_VERSION"
 
 COPY . .
 
-RUN poetry config virtualenvs.create false \
-  && poetry install --no-cache --no-interaction --no-ansi
+RUN poetry --no-cache config virtualenvs.create false \
+  && poetry --no-cache install --no-interaction --no-ansi
 
 
-CMD ["poetry", "run", "python", "./starship/__init__.py"]
+CMD ["poetry", "run", "python", "starship/wsgi.py"]
 EXPOSE ${SERVER_PORT}

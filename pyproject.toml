@@ -9,10 +9,13 @@ packages = [{include = "starship"}]
 
 [tool.poetry.dependencies]
 python = "^3.10"
-Flask = "^2.2.3"
+flask = "^2.2.3"
+flask-wtf = "^1.1.1"
+flask-sqlalchemy = "^3.0.3"
+flask-login = "^0.6.2"
 pyruvate = "^1.2.1"
 python-dotenv = "^1.0.0"
-PyMySQL = "^1.0.2"
+pymysql = "^1.0.2"
 
 
 [build-system]
