@@ -1,15 +1,51 @@
-from sqlalchemy import Integer, String, Float
-from sqlalchemy.orm import Mapped, mapped_column, relationship
+from typing import List
+from flask_login import UserMixin
+from sqlalchemy import Boolean, Column, ForeignKey, Integer, String, Float, Table
+from sqlalchemy.orm import Mapped, relationship
+from werkzeug.security import check_password_hash, generate_password_hash
 
 from starship import db
+
+crew_groups = Table(
+    "crew_groups",
+    db.metadata,
+    Column("crew_id", ForeignKey("crews.id")),
+    Column("user_id", ForeignKey("users.id")),
+)
+
+detail_copy_groups = Table(
+    "detail_copy_groups",
+    db.metadata,
+    Column("detail_id", ForeignKey("details_copies.id")),
+    Column("ship_id", ForeignKey("ships.id")),
+)
+
+
+class User(UserMixin, db.Model):
+    __tablename__ = "users"
+
+    id = Column(Integer, primary_key=True, autoincrement=True)
+    login = Column(String, unique=True)
+    password = Column(String, unique=False)
+    is_admin = Column(Boolean)
+    crews: Mapped[List["Crew"]] = relationship(secondary="crew_groups")
+
+    def __repr__(self):
+        return f"User(id={self.id}, login={self.login}, password={self.password}, admin={self.admin})"
+
+    def set_password(self, password):
+        self.password = generate_password_hash(password, method="sha256")
+
+    def check_password(self, password):
+        return check_password_hash(self.password, password)
 
 
 class Sentence(db.Model):
     __tablename__ = "sentences"
 
-    id: Mapped[int] = mapped_column(primary_key=True)
-    en: Mapped[str] = mapped_column(String(6500))
-    ru: Mapped[str] = mapped_column(String(6500))
+    id = Column(Integer, primary_key=True, autoincrement=True)
+    en = Column(String(6500))
+    ru = Column(String(6500))
 
     def __repr__(self):
         return f"Sentence(id={self.id!r}, en={self.en!r}, ru={self.ru!r})"
@@ -18,9 +54,13 @@ class Sentence(db.Model):
 class Ship(db.Model):
     __tablename__ = "ships"
 
-    id: Mapped[int] = mapped_column(primary_key=True)
-    shame: Mapped[int] = mapped_column(String(255))
-    crew: Mapped["Crew"] = relationship(back_populates="ship")
+    id = Column(Integer, primary_key=True, autoincrement=True)
+    shame = Column(String(255))
+
+    crew_id = Column(Integer, ForeignKey("crews.id"))
+    crew = relationship("Crew", back_populates="ship", foreign_keys=[crew_id])
+
+    details: Mapped[List["DetailCopy"]] = relationship(secondary="detail_copy_groups")
 
     def __repr__(self):
         return f"Ship(id={self.id!r}, shame={self.shame!r}, crew={self.crew!r})"
@@ -29,41 +69,56 @@ class Ship(db.Model):
 class Crew(db.Model):
     __tablename__ = "crews"
 
-    token: Mapped[str] = mapped_column(String(255), primary_key=True)
-    name: Mapped[str] = mapped_column(String(255), unique=True)
-    ship: Mapped["Ship"] = relationship(back_populates="crew")
+    id = Column(Integer, primary_key=True, autoincrement=True)
+
+    token = Column(String(255), unique=True)
+    name = Column(String(255), unique=True)
+
+    ship = relationship("Ship", back_populates="crew")
+
+    owner_id = Column(Integer, ForeignKey("users.id"))
+    owner = relationship("User", foreign_keys=[owner_id])
 
     def __repr__(self):
-        return f"Crew(name={self.name!r}, ship={self.ship!r}, token={self.token!r})"
+        return f"Crew(name={self.name!r}, ship={self.ship!r}, token={self.token!r}, owner={self.owner!r})"
 
 
 class DetailType(db.Model):
     __tablename__ = "detail_types"
 
-    id: Mapped[int] = mapped_column(primary_key=True)
-    name: Mapped["Sentence"] = relationship()
-    description: Mapped["Sentence"] = relationship()
+    id = Column(Integer, primary_key=True, autoincrement=True)
+
+    name_id = Column(Integer, ForeignKey("sentences.id"))
+    name = relationship("Sentence", foreign_keys=[name_id])
+
+    description_id = Column(Integer, ForeignKey("sentences.id"))
+    description = relationship("Sentence", foreign_keys=[description_id])
 
     def __repr__(self):
         return f"DetailType(id={self.id!r}, name={self.name!r}, description={self.description!r})"
 
 
 class Detail(db.Model):
-    __tablename__ = "detalis"
+    __tablename__ = "details"
 
-    id: Mapped[int] = mapped_column(primary_key=True)
-    kind: Mapped["DetailType"] = relationship()
+    id = Column(Integer, primary_key=True, autoincrement=True)
 
-    cost: Mapped[int] = mapped_column(nullable=False)
-    health: Mapped[int] = mapped_column(nullable=False)
+    kind_id = Column(Integer, ForeignKey("detail_types.id"))
+    kind = relationship("DetailType", foreign_keys=[kind_id])
 
-    power_generation: Mapped[int] = mapped_column(Integer)
-    accel_factor: Mapped[float] = mapped_column(Float)
-    damage_absorption: Mapped[int] = mapped_column(Integer)
-    damage: Mapped[int] = mapped_column(Integer)
+    cost = Column(Integer, nullable=False)
+    health = Column(Integer, nullable=False)
 
-    name: Mapped["Sentence"] = relationship()
-    description: Mapped["Sentence"] = relationship()
+    power_generation = Column(Integer)
+    accel_factor = Column(Float)
+    damage_absorption = Column(Integer)
+    damage = Column(Integer)
+
+    name_id = Column(Integer, ForeignKey("sentences.id"))
+    name = relationship("Sentence", foreign_keys=[name_id])
+
+    description_id = Column(Integer, ForeignKey("sentences.id"))
+    description = relationship("Sentence", foreign_keys=[description_id])
 
     def __repr__(self):
         return f"Detail(id={self.id!r}, name={self.name!r}, description={self.description!r}, kind={self.kind!r}, cost={self.cost!r}, ...)"
@@ -72,10 +127,15 @@ class Detail(db.Model):
 class DetailCopy(db.Model):
     __tablename__ = "details_copies"
 
-    id: Mapped[int] = mapped_column(primary_key=True)
-    ship: Mapped["Ship"] = relationship()
-    kind: Mapped["Detail"] = relationship()
-    level: Mapped[int] = mapped_column()
+    id = Column(Integer, primary_key=True, autoincrement=True)
+
+    ship_id = Column(Integer, ForeignKey("ships.id"))
+    ship = relationship("Ship", foreign_keys=[ship_id])
+
+    kind_id = Column(Integer, ForeignKey("details.id"))
+    kind = relationship("Detail", foreign_keys=[kind_id])
+
+    level = Column(Integer, default=1)
 
     def __repr__(self):
         return f"DetailCopy(id={self.id!r}, ship={self.ship!r}, kind={self.kind!r}, level={self.level!r})"
@@ -84,8 +144,9 @@ class DetailCopy(db.Model):
 class RequiredShipDetail(db.Model):
     __tablename__ = "required_ship_details"
 
-    id: Mapped[int] = mapped_column(primary_key=True)
-    detail_type: Mapped["DetailType"] = relationship()
+    id = Column(Integer, primary_key=True)
+    detail_type_id = Column(Integer, ForeignKey("detail_types.id"))
+    detail_type = relationship("DetailType", foreign_keys=[detail_type_id])
 
     def __repr__(self):
         return f"ReuqiredShipDetail(id={self.id!r}, detail_type={self.detail_type!r}"

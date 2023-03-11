@@ -4,9 +4,6 @@ from flask import Flask
 from flask_login import LoginManager
 from flask_sqlalchemy import SQLAlchemy
 
-import dbhelper
-from admin import admin_bp
-from api import api_bp
 
 db = SQLAlchemy()
 login_manager = LoginManager()
@@ -18,7 +15,10 @@ def get_secret_key():
 
 
 def make_app():
-    import models as _
+    import dbhelper
+    from api import api_bp
+    from admin import admin_bp
+    import models
 
     app = Flask(__name__)
 

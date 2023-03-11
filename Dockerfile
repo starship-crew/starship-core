@@ -11,7 +11,7 @@ ENV PYTHONFAULTHANDLER=1 \
 WORKDIR /app
 
 RUN apk upgrade --no-cache && \
-    apk add --no-cache libgcc gcc musl-dev mariadb-connector-c-dev bind-tools
+    apk add --no-cache libgcc gcc musl-dev bind-tools postgresql-libs postgresql-dev
 
 RUN pip install --no-cache-dir "poetry==$POETRY_VERSION"
 

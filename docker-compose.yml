@@ -2,14 +2,14 @@ version: "3"
 
 services:
   db:
-    image: mysql:8.0
+    image: postgres:15.2-alpine3.17
     env_file: .env
-    volumes:
-      - mysql:/var/lib/mysql
+    # volumes:
+    #   - postgres:${PGDATA}
     ports:
-      - 3306:3306
+      - 5432:5432
     secrets:
-      - source: mysql_root_password
+      - source: postgres_root_password
     networks:
       - default
 
@@ -20,19 +20,18 @@ services:
     ports:
       - ${SERVER_PORT}:${FORWARDED_PORT}
     secrets:
-      - source: mysql_root_password
+      - source: postgres_root_password
       - source: secret_key
-    restart: on-failure
     networks:
       - default
 
 
 volumes:
-  mysql:
+  postgres:
 
 secrets:
-      mysql_root_password:
-        file: .secrets/mysql_root_password
+      postgres_root_password:
+        file: .secrets/postgres_root_password
       secret_key:
         file: .secrets/secret_key
 
