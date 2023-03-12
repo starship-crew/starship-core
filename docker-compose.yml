@@ -5,8 +5,8 @@ services:
     image: postgres:15.2-alpine3.17
     env_file: .env
     hostname: db
-    # volumes:
-    #   - postgres:${PGDATA}
+    volumes:
+      - postgres:${PGDATA}
     ports:
       - 5432:5432
     secrets:
@@ -23,6 +23,7 @@ services:
     secrets:
       - source: postgres_root_password
       - source: secret_key
+      - source: admin_initial_password
     networks:
       - default
 
@@ -35,6 +36,8 @@ secrets:
         file: .secrets/postgres_root_password
       secret_key:
         file: .secrets/secret_key
+      admin_initial_password:
+        file: .secrets/admin_initial_password
 
 networks:
   default:

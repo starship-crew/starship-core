@@ -15,11 +15,12 @@ RUN apk upgrade --no-cache && \
 
 RUN pip install --no-cache-dir "poetry==$POETRY_VERSION"
 
+COPY pyproject.toml poetry.lock .
+RUN poetry config --no-cache virtualenvs.create false \
+  && poetry install --no-cache --no-root --no-dev --no-interaction --no-ansi
+
 COPY . .
-
-RUN poetry --no-cache config virtualenvs.create false \
-  && poetry --no-cache install --no-interaction --no-ansi
-
+RUN poetry install --no-cache --no-dev --no-interaction --no-ansi
 
 CMD ["poetry", "run", "python", "starship/wsgi.py"]
 EXPOSE ${SERVER_PORT}
