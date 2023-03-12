@@ -25,13 +25,10 @@ def create_inital_admin():
         with open(FILE) as file:
             return file.read().rstrip()
 
-    if not next(
-        iter(
-            db.session.query(models.User).filter(
-                models.User.login == "admin", models.User.is_admin
-            )
-        ),
-        None,
+    if (
+        not db.session.query(models.User)
+        .filter(models.User.login == "admin", models.User.is_admin)
+        .first()
     ):
         admin_user = models.User()
         admin_user.login = "admin"
