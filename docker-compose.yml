@@ -4,6 +4,7 @@ services:
   db:
     image: postgres:15.2-alpine3.17
     env_file: .env
+    hostname: db
     # volumes:
     #   - postgres:${PGDATA}
     ports:
