@@ -39,14 +39,14 @@ def create_inital_admin():
 
 
 def make_app():
-    import dbhelper
+    import helper
     from api import api_bp
     from admin import admin_bp
 
     app = Flask(__name__)
 
     app.config["SECRET_KEY"] = get_secret_key()
-    app.config["SQLALCHEMY_DATABASE_URI"] = dbhelper.get_url()
+    app.config["SQLALCHEMY_DATABASE_URI"] = helper.get_db_url()
 
     db.init_app(app)
     login_manager.init_app(app)
