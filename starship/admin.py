@@ -1,4 +1,4 @@
-from models import User
+from models import Crew, User
 from starship import login_manager
 from flask_wtf import FlaskForm
 from wtforms.validators import DataRequired
@@ -25,7 +25,10 @@ def dashboard():
     if not current_user.is_admin:
         return abort(403)
     return render_template(
-        "admin/dashboard.html", title="Dashboard", users=db.session.query(User).all()
+        "admin/dashboard.html",
+        title="Dashboard",
+        users=db.session.query(User).all(),
+        crews=db.session.query(Crew).all(),
     )
 
 
