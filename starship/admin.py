@@ -5,6 +5,7 @@ from wtforms.validators import DataRequired
 from flask_login import current_user, login_required, login_user, logout_user
 from wtforms import BooleanField, PasswordField, StringField, SubmitField
 from flask import Blueprint, abort, flash, redirect, request, url_for, render_template
+from starship import db
 
 from starship.helper import is_safe_url
 
@@ -23,7 +24,9 @@ class LoginForm(FlaskForm):
 def dashboard():
     if not current_user.is_admin:
         return abort(403)
-    return render_template("admin/dashboard.html", title="Dashboard")
+    return render_template(
+        "admin/dashboard.html", title="Dashboard", users=db.session.query(User).all()
+    )
 
 
 @admin_bp.route("/login", methods=["GET", "POST"])
