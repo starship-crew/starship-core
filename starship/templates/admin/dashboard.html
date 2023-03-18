@@ -4,35 +4,30 @@
 
 <div class="container-fluid w-75">
     <h2>Users</h2>
-    <ul class="list-group">
-        <li class="d-flex list-group-item justify-content-between">
-            <span class="badge bg-danger">User1</span>
-            <span class="badge bg-primary">550 Qk</span>
-            <div>
-                <span class="badge bg-success">Crew1</span>
-                <span class="badge bg-success">Crew2</span>
-                <span class="badge bg-success">Crew3</span>
-            </div>
-        </li>
-        <li class="d-flex list-group-item justify-content-between">
-            <span class="badge bg-secondary">User2</span>
-            <span class="badge bg-primary">120 Qk</span>
-            <div>
-                <span class="badge bg-success">Crew4</span>
-                <span class="badge bg-success">Crew5</span>
-                <span class="badge bg-success">Crew6</span>
-            </div>
-        </li>
-        <li class="d-flex list-group-item justify-content-between">
-            <span class="badge bg-danger">User3</span>
-            <span class="badge bg-primary">330 Qk</span>
-            <div>
-                <span class="badge bg-success">Crew7</span>
-                <span class="badge bg-success">Crew8</span>
-                <span class="badge bg-success">Crew9</span>
-            </div>
-        </li>
-    </ul>
+    <table class="table table-hover table-striped table-bordered align-middle table-sm">
+        <thead>
+            <tr class="text-center">
+                <th scope="col">#</th>
+                <th scope="col">User</th>
+                <th scope="col">Currency</th>
+                <th scope="col">Admin</th>
+                <th scope="col" class="w-25">Crews</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr class="text-center">
+                <th scope="row" class="text-center">1</th>
+                <td>User1</td>
+                <td class="text-center"><span class="badge bg-primary">550 Qk</span></td>
+                <td class="text-center"><span class="badge bg-danger">yes</span></td>
+                <td class="text-center">
+                    <span class="badge bg-success">Crew1</span>
+                    <span class="badge bg-success">Crew2</span>
+                    <span class="badge bg-success">Crew3</span>
+                </td>
+            </tr>
+        </tbody>
+    </table>
 
     <h2>Crews</h2>
 
