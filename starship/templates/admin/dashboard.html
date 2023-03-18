@@ -2,8 +2,35 @@
 
 {% block content %}
 
-<div>
-    Dashboard
+<div class="container-fluid w-75">
+    <h2>Users</h2>
+    <table class="table table-hover table-striped table-bordered align-middle table-sm">
+        <thead>
+            <tr class="text-center">
+                <th scope="col">#</th>
+                <th scope="col">User</th>
+                <th scope="col">Currency</th>
+                <th scope="col">Admin</th>
+                <th scope="col" class="w-25">Crews</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <th scope="row" class="text-center">1</th>
+                <td>User1</td>
+                <td class="text-center"><span class="badge bg-primary">550 Qk</span></td>
+                <td class="text-center"><span class="badge bg-danger">yes</span></td>
+                <td class="text-center">
+                    <span class="badge bg-success">Crew1</span>
+                    <span class="badge bg-success">Crew2</span>
+                    <span class="badge bg-success">Crew3</span>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+
+    <h2>Crews</h2>
+
 </div>
 
 {% endblock %}
