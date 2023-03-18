@@ -77,8 +77,10 @@ class Crew(db.Model):
 
     ship = relationship("Ship", back_populates="crew")
 
-    owner_id = Column(Integer, ForeignKey("users.id"))
-    owner = relationship("User", foreign_keys=[owner_id])
+    owners: Mapped[List["User"]] = relationship(
+        secondary="crew_groups",
+        back_populates="crews",
+    )
 
     def __repr__(self):
         return f"Crew(name={self.name!r}, ship={self.ship!r}, token={self.token!r}, owner={self.owner!r})"
