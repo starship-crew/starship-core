@@ -27,6 +27,7 @@ class User(UserMixin, db.Model):
     id = Column(Integer, primary_key=True, autoincrement=True)
     login = Column(String, unique=True)
     password = Column(String, unique=False)
+    currency = Column(Integer, default=0)
     is_admin = Column(Boolean)
     crews: Mapped[List["Crew"]] = relationship(secondary="crew_groups")
 

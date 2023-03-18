@@ -3,7 +3,7 @@ from starship import login_manager
 from flask_wtf import FlaskForm
 from wtforms.validators import DataRequired
 from flask_login import current_user, login_required, login_user, logout_user
-from wtforms import PasswordField, StringField, SubmitField
+from wtforms import BooleanField, PasswordField, StringField, SubmitField
 from flask import Blueprint, abort, flash, redirect, request, url_for, render_template
 
 from starship.helper import is_safe_url
@@ -14,6 +14,7 @@ admin_bp = Blueprint("admin_bp", __name__, url_prefix="/dashboard")
 class LoginForm(FlaskForm):
     login = StringField("Login", validators=[DataRequired()])
     password = PasswordField("Password", validators=[DataRequired()])
+    remember_me = BooleanField("Remember me")
     submit = SubmitField("Log In")
 
 
@@ -36,7 +37,7 @@ def login():
         user = User.query.filter_by(login=form.login.data).first()
 
         if user and user.check_password(form.password.data):
-            login_user(user)
+            login_user(user, remember=form.remember_me.data)
 
             next = request.args.get("next")
 

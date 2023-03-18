@@ -9,30 +9,34 @@
 </div>
 {% endfor %}
 
-<form method="post" action="{{ url_for('admin_bp.login') }}" novalidate>
-    {{ form.csrf_token }}
+<form class="container-fluid w-50" method="post" action="{{ url_for('admin_bp.login') }}" novalidate>
+    {{ form.hidden_tag() }}
 
-    {{ form.login.label }}
-    {{ form.login }}
+    <h1>Dashboard Login</h1>
 
-    {{ form.password.label }}
-    {{ form.password }}
-
-    {% if form.login.errors %}
-    <ul class="errors">
+    <p>
+        {{ form.login.label }}<br>
+        {{ form.login(class="form-control") }}<br>
         {% for error in form.login.errors %}
-        <li>{{ error }}</li>{% endfor %}
-    </ul>
-    {% endif %}
+        <div class="alert alert-danger" role="alert">
+            {{ error }}
+        </div>
+        {% endfor %}
+    </p>
 
-    {% if form.password.errors %}
-    <ul class="errors">
+    <p>
+        {{ form.password.label }}<br>
+        {{ form.password(class="form-control", type="password") }}<br>
         {% for error in form.password.errors %}
-        <li>{{ error }}</li>{% endfor %}
-    </ul>
-    {% endif %}
+        <div class="alert alert-danger" role="alert">
+            {{ error }}
+        </div>
+        {% endfor %}
+    </p>
 
-    {{ form.submit }}
+    <p>{{ form.remember_me() }} {{ form.remember_me.label }}</p>
+
+    <p>{{ form.submit(type="submit", class="btn btn-primary") }}</p>
 </form>
 
 {% endblock %}
