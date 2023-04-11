@@ -22,9 +22,9 @@
                     <td class="text-center"><span class="badge bg-primary">{{ user.currency }} Qk</span></td>
                     <td class="text-center">
                         {% if user.is_admin %}
-                            <span class="badge bg-danger">yes</span>
+                            <a href="{{ url_for('admin_bp.toggle_admin_state', user_id=user.id) }}" class="btn badge bg-danger">yes</a>
                         {% else %}
-                            <span class="badge bg-secondary">no</span>
+                            <a href="{{ url_for('admin_bp.toggle_admin_state', user_id=user.id) }}" class="btn badge bg-secondary">no</a>
                         {% endif %}
                     </td>
                     <td class="text-center">

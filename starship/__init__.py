@@ -25,11 +25,7 @@ def create_inital_admin():
         with open(FILE) as file:
             return file.read().rstrip()
 
-    if (
-        not db.session.query(models.User)
-        .filter(models.User.login == "admin", models.User.is_admin)
-        .first()
-    ):
+    if not db.session.query(models.User).filter(models.User.login == "admin").first():
         admin_user = models.User()
         admin_user.login = "admin"
         admin_user.set_password(get_initial_admin_password())

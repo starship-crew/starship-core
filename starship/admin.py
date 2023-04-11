@@ -1,13 +1,14 @@
+from sqlalchemy import desc
 from models import Crew, User
 from starship import login_manager
 from flask_wtf import FlaskForm
 from wtforms.validators import DataRequired
 from flask_login import current_user, login_required, login_user, logout_user
 from wtforms import BooleanField, PasswordField, StringField, SubmitField
-from flask import Blueprint, abort, flash, redirect, request, url_for, render_template
+from flask import Blueprint, abort, flash, redirect, url_for, render_template
 from starship import db
-
-from starship.helper import is_safe_url
+from starship.helper import redirect_url
+from functools import wraps
 
 admin_bp = Blueprint("admin_bp", __name__, url_prefix="/dashboard")
 
@@ -19,15 +20,24 @@ class LoginForm(FlaskForm):
     submit = SubmitField("Log In")
 
 
+def admin_required(func):
+    @wraps(func)
+    @login_required
+    def new_func(*args, **kwargs):
+        if not current_user.is_admin:
+            return abort(403)
+        return func(*args, **kwargs)
+
+    return new_func
+
+
 @admin_bp.route("/")
-@login_required
+@admin_required
 def dashboard():
-    if not current_user.is_admin:
-        return abort(403)
     return render_template(
         "admin/dashboard.html",
         title="Dashboard",
-        users=db.session.query(User).all(),
+        users=db.session.query(User).order_by(desc(User.is_admin)).all(),
         crews=db.session.query(Crew).all(),
     )
 
@@ -45,12 +55,7 @@ def login():
         if user and user.check_password(form.password.data):
             login_user(user, remember=form.remember_me.data)
 
-            next = request.args.get("next")
-
-            if not is_safe_url(next):
-                abort(400)
-
-            return redirect(next or url_for("admin_bp.dashboard"))
+            return redirect(redirect_url("admin_bp.dashboard"))
 
         flash("Invalid login/password")
 
@@ -77,3 +82,13 @@ def load_user(user_id):
 def unauthorized():
     flash("You must be logged in to view that page.")
     return redirect(url_for("admin_bp.login"))
+
+
+@admin_bp.route("/toggle_admin_state/<int:user_id>")
+@admin_required
+def toggle_admin_state(user_id):
+    if current_user.id != user_id:
+        user = db.session.query(User).get(user_id)
+        user.is_admin = not user.is_admin
+        db.session.commit()
+    return redirect(redirect_url("admin_bp.dashboard"))

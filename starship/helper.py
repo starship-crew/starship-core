@@ -1,7 +1,7 @@
 import os
 
 from urllib.parse import urlparse, urljoin
-from flask import request
+from flask import request, url_for, abort
 
 POSTGRES_HOST_FALLBACK = "localhost"
 POSTGRES_USER_FALLBACK = "root"
@@ -31,3 +31,10 @@ def is_safe_url(target):
     test_url = urlparse(urljoin(request.host_url, target))
 
     return test_url.scheme in ("http", "https") and ref_url.netloc == test_url.netloc
+
+
+def redirect_url(default="index"):
+    next = request.args.get("next")
+    if next and not is_safe_url(next):
+        abort(400)
+    return next or request.referrer or url_for(default)
