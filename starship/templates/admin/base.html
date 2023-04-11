@@ -15,8 +15,18 @@
                 {% if current_user.is_authenticated and current_user.is_admin %}
                     <form class="d-flex" role="search">
                         <input class="form-control me-2" type="search" placeholder="Global search request" aria-label="Global Search">
-                        <button class="btn btn-outline-success" type="submit">Search</button>
+                        <button class="btn btn-outline-success me-2" type="submit">Search</button>
+                        <div class="dropdown">
+                            <button class="btn btn-outline-success dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">+</button>
+                            <div class="dropdown-menu">
+                                <h6 class="dropdown-header">Create an entity</h6>
+                                <a class="dropdown-item" href="{{ url_for('admin_bp.create_user') }}">User</a>
+                                <a class="dropdown-item" href="{{ url_for('admin_bp.create_crew') }}">Crew</a>
+                                <a class="dropdown-item" href="{{ url_for('admin_bp.create_ship') }}">Ship</a>
+                            </div>
+                        </div>
                     </form>
+
                     <a href="{{ url_for('admin_bp.logout') }}">Logout</a>
                 {% endif %}
             </div>

@@ -1,0 +1,52 @@
+{% extends "admin/base.html" %}
+
+{% block content %}
+
+{% for message in get_flashed_messages() %}
+<div class="alert alert-warning">
+    <button type="button" class="close" data-dismiss="alert">&times;</button>
+    {{ message }}
+</div>
+{% endfor %}
+
+<form class="container-fluid w-50" method="post" action="{{ url_for('admin_bp.create_user') }}" novalidate>
+    {{ form.hidden_tag() }}
+
+    <h1>Create a new user</h1>
+
+    <p>
+        {{ form.login.label }}<br>
+        {{ form.login(class="form-control") }}<br>
+        {% for error in form.login.errors %}
+        <div class="alert alert-danger" role="alert">
+            {{ error }}
+        </div>
+        {% endfor %}
+    </p>
+
+    <p>
+        {{ form.password.label }}<br>
+        {{ form.password(class="form-control", type="password") }}<br>
+        {% for error in form.password.errors %}
+        <div class="alert alert-danger" role="alert">
+            {{ error }}
+        </div>
+        {% endfor %}
+    </p>
+
+    <p>
+        {{ form.currency.label }}<br>
+        {{ form.currency(class="form-control", type="number") }}<br>
+        {% for error in form.currency.errors %}
+        <div class="alert alert-danger" role="alert">
+            {{ error }}
+        </div>
+        {% endfor %}
+    </p>
+
+    <p>{{ form.is_admin() }} {{ form.is_admin.label }}</p>
+
+    <p>{{ form.submit(type="submit", class="btn btn-success") }}</p>
+</form>
+
+{% endblock %}
