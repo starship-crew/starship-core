@@ -13,13 +13,6 @@ from functools import wraps
 admin_bp = Blueprint("admin_bp", __name__, url_prefix="/dashboard")
 
 
-class LoginForm(FlaskForm):
-    login = StringField("Login", validators=[DataRequired()])
-    password = PasswordField("Password", validators=[DataRequired()])
-    remember_me = BooleanField("Remember me")
-    submit = SubmitField("Log In")
-
-
 def admin_required(func):
     @wraps(func)
     @login_required
@@ -40,6 +33,13 @@ def dashboard():
         users=db.session.query(User).order_by(desc(User.is_admin)).all(),
         crews=db.session.query(Crew).all(),
     )
+
+
+class LoginForm(FlaskForm):
+    login = StringField("Login", validators=[DataRequired()])
+    password = PasswordField("Password", validators=[DataRequired()])
+    remember_me = BooleanField("Remember me")
+    submit = SubmitField("Log In")
 
 
 @admin_bp.route("/login", methods=["GET", "POST"])
