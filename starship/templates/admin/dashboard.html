@@ -16,16 +16,27 @@
         </thead>
         <tbody>
             {% for user in users %}
-                <tr class="text-center">
-                    <th scope="row" class="text-center">{{ user.id }}</th>
-                    <td>{{ user.login }}</td>
-                    <td class="text-center"><span class="badge bg-primary">{{ user.currency }} Qk</span></td>
+                <tr class="text-center {%- if current_user.id == user.id%} table-danger{%- endif -%}">
+                    <th scope="row" class="text-center" style="cursor: pointer;" onclick="gotoUser({{user.id}})">{{ user.id }}</th>
+                    <td style="cursor: pointer;" onclick="gotoUser({{user.id}})">{{ user.login }}</td>
                     <td class="text-center">
-                        {% if user.is_admin %}
-                            <a href="{{ url_for('admin_bp.toggle_admin_state', user_id=user.id) }}" class="btn badge bg-danger">yes</a>
-                        {% else %}
-                            <a href="{{ url_for('admin_bp.toggle_admin_state', user_id=user.id) }}" class="btn badge bg-secondary">no</a>
-                        {% endif %}
+                        <span href="#" class="btn badge bg-primary" style="cursor: pointer;" onclick="navigator.clipboard.writeText('{{ user.currency }}')" data-bs-toggle="tooltip" data-bs-title="Click to copy">{{ user.currency }} Qk</span>
+                    </td>
+                    <td class="text-center">
+                            <a
+                                href="{{ url_for('admin_bp.toggle_admin_state', user_id=user.id) }}"
+                                class="btn badge bg-{%- if user.is_admin -%}danger{%- else -%}secondary{%- endif -%} {%- if current_user.id == user.id %} disabled{%- endif -%}"
+                                {% if user.id != current_user.id %}
+                                    data-bs-toggle="tooltip"
+                                    data-bs-title="Click to toggle"
+                                {% endif %}
+                            >
+                                {% if user.is_admin %}
+                                    yes
+                                {% else %}
+                                    no
+                                {% endif %}
+                            </a>
                     </td>
                     <td class="text-center">
                         {% for crew in user.crews %}
@@ -45,9 +56,9 @@
                     <div class="list-group-item list-group-item-action">
                         <div class="d-flex w-100 justify-content-between">
                             <div class="d-flex flex-wrap align-content-center">
-                                <h5 class="mb-1" onclick="navigator.clipboard.writeText('{{ crew.id }}')">{{ crew.id }}</h5>
-                                <span> / </span>
-                                <h5 class="mb-1" onclick="navigator.clipboard.writeText('{{ crew.name }}')">{{ crew.name }}</h5>
+                                <h5 class="mb-1 text-secondary-emphasis" style="cursor: pointer;" onclick="navigator.clipboard.writeText('{{ crew.id }}')" data-bs-toggle="tooltip" data-bs-title="Click to copy">{{ crew.id }}</h5>
+                                <span>/</span>
+                                <h5 class="mb-1 text-secondary-emphasis" style="cursor: pointer;" onclick="navigator.clipboard.writeText('{{ crew.name }}')" data-bs-toggle="tooltip" data-bs-title="Click to copy">{{ crew.name }}</h5>
                             </div>
                             <div class="d-flex flex-column">
                                 <button class="btn" onclick="navigator.clipboard.writeText('{{ crew.token }}')">Copy Token</button>

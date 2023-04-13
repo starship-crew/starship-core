@@ -1,3 +1,5 @@
+import sqlalchemy as sa
+
 from sqlalchemy import desc
 from models import Crew, User
 from starship import login_manager
@@ -5,18 +7,27 @@ from flask_wtf import FlaskForm
 from wtforms.validators import DataRequired
 from flask_login import current_user, login_required, login_user, logout_user
 from wtforms import BooleanField, IntegerField, PasswordField, StringField, SubmitField
-from flask import Blueprint, abort, flash, redirect, url_for, render_template
+from flask import Blueprint, abort, flash, redirect, request, url_for, render_template
 from starship import db
-from starship.helper import redirect_url
 from functools import wraps
+from starship.helper import is_safe_url
 
 admin_bp = Blueprint("admin_bp", __name__, url_prefix="/dashboard")
+
+
+def redirect_url(default="admin_bp.dashboard"):
+    next = request.args.get("next")
+    if next and not is_safe_url(next):
+        abort(400)
+    return next or request.referrer or url_for(default)
 
 
 @admin_bp.errorhandler(403)
 @login_required
 def forbidden(e):
-    return render_template("admin/user.html")
+    return render_template(
+        "admin/user.html", title=f"User {current_user.login}", user=current_user
+    )
 
 
 def admin_required(func):
@@ -80,7 +91,7 @@ def logout():
 @login_manager.user_loader
 def load_user(user_id):
     if user_id is not None:
-        return User.query.get(user_id)
+        return db.session.query(User).get(user_id)
     return
 
 
@@ -130,6 +141,56 @@ def create_user():
         flash("User with this login already exists")
 
     return render_template("admin/create_user.html", form=form, title="User creation")
+
+
+@admin_bp.route("/user/<int:user_id>")
+@admin_required
+def user(user_id):
+    user = db.session.query(User).get(user_id)
+    if not user:
+        return abort(404)
+    return render_template("admin/user.html", title=f"User {user.login}", user=user)
+
+
+# @admin_bp.route("/user/<int:user_id>/set_currency/<new_currency>")
+# @admin_required
+# def set_user_currency(user_id, new_currency):
+#     user = db.session.query(User).get(user_id)
+
+#     if not user:
+#         return redirect(redirect_url())
+
+#     try:
+#         user.currency = new_currency
+#         db.session.commit()
+#     except sa.exc.DataError as e:
+#         flash(f"Error while changing user's currency value: {e}")
+
+#     return redirect(redirect_url())
+
+
+@admin_bp.route("/user/<int:id>/set_<field>/<value>")
+def change_user_field(id, field, value):
+    user = db.session.query(User).get(id)
+
+    if not user:
+        return redirect(redirect_url())
+
+    try:
+        match field:
+            case "login":
+                user.login = value
+            case "password":
+                user.password = value
+            case "currency":
+                user.currency = value
+        db.session.commit()
+    except sa.exc.IntegrityError:
+        flash(f'User with {field} "{value}" already exists')
+    except sa.exc.DataError:
+        flash(f'Failed to change {field} to "{value}" cause of data processing issues')
+
+    return redirect(redirect_url())
 
 
 @admin_bp.route("/create_crew")

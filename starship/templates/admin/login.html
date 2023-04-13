@@ -2,13 +2,6 @@
 
 {% block content %}
 
-{% for message in get_flashed_messages() %}
-<div class="mx-4 alert alert-warning d-flex justify-content-between">
-    <div>{{ message }}</div>
-    <button type="button" class="btn-close" aria-label="Close" onclick="this.parentElement.remove()"></button>
-</div>
-{% endfor %}
-
 <form class="container-fluid w-50" method="post" action="{{ url_for('admin_bp.login') }}" novalidate>
     {{ form.hidden_tag() }}
 

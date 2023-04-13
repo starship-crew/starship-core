@@ -31,10 +31,3 @@ def is_safe_url(target):
     test_url = urlparse(urljoin(request.host_url, target))
 
     return test_url.scheme in ("http", "https") and ref_url.netloc == test_url.netloc
-
-
-def redirect_url(default="index"):
-    next = request.args.get("next")
-    if next and not is_safe_url(next):
-        abort(400)
-    return next or request.referrer or url_for(default)
