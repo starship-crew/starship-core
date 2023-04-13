@@ -13,6 +13,12 @@ from functools import wraps
 admin_bp = Blueprint("admin_bp", __name__, url_prefix="/dashboard")
 
 
+@admin_bp.errorhandler(403)
+@login_required
+def forbidden(e):
+    return render_template("admin/user.html")
+
+
 def admin_required(func):
     @wraps(func)
     @login_required

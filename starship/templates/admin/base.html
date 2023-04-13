@@ -26,7 +26,8 @@
                             </div>
                         </div>
                     </form>
-
+                {% endif %}
+                {% if current_user.is_authenticated %}
                     <a href="{{ url_for('admin_bp.logout') }}">Logout</a>
                 {% endif %}
             </div>
