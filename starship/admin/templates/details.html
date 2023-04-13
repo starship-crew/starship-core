@@ -3,7 +3,17 @@
 {% block content %}
 
 <div class="container-fluid w-75">
-    <h2>Detail Types</h2>
+    <div class="d-flex justify-content-between">
+        <h2>Detail Types</h2>
+        <ul class="nav nav-pills">
+            <li class="nav-item">
+                <a class="nav-link {%- if lang == 'en' %} active{%- endif -%}" href="{{url_for('admin_bp.detail_management', lang='en')}}">EN</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link {%- if lang == 'ru' %} active{%- endif -%}" href="{{url_for('admin_bp.detail_management', lang='ru')}}">RU</a>
+            </li>
+        </ul>
+    </div>
     <table class="table table-hover table-striped table-bordered align-middle table-sm">
         <thead>
             <tr class="text-center">
@@ -14,8 +24,13 @@
         <tbody>
             {% for detail_type in detail_types %}
                 <tr>
-                    <td>{{detail_type.name}}</td>
-                    <td>{{detail_type.description}}</td>
+                    {% if lang == "en" %}
+                        <td>{{detail_type.name.en}}</td>
+                        <td>{{detail_type.description.en}}</td>
+                    {% elif lang == "ru" %}
+                        <td>{{detail_type.name.ru}}</td>
+                        <td>{{detail_type.description.ru}}</td>
+                    {% endif %}
                 </tr>
             {% endfor %}
         </tbody>

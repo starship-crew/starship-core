@@ -12,16 +12,18 @@ try:
 except ImportError:
     from yaml import BaseLoader as YamlLoader
 
-from flask import redirect, render_template, url_for
+from flask import redirect, render_template, request, url_for
 
 
 @admin_bp.route("/details")
 def detail_management():
     db_sess = db_session.create_session()
+    lang = request.args.get("lang", "ru")
     return render_template(
         "details.html",
         title="Detail Management",
         details_page=True,
+        lang=lang,
         detail_types=db_sess.query(DetailType).all(),
     )
 
