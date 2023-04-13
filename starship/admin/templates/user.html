@@ -1,4 +1,4 @@
-{% extends "admin/base.html" %}
+{% extends "base.html" %}
 
 {% block content %}
 
@@ -27,10 +27,18 @@
             {% endif %}
         </a>
         {% endif %}
+
         <a href="#" class="btn btn-sm btn-outline-primary me-4" onclick="changeCurrency({{user.id}}, '{{user.login}}', {{user.currency}})">Change currency value</a>
-        <a href="#" class="btn btn-sm btn-outline-secondary me-4" onclick="changeLogin({{user.id}}, '{{user.login}}', '{{user.login}}')">Change login</a>
+
+        {% if not user.is_primary_admin() %}
+            <a href="#" class="btn btn-sm btn-outline-secondary me-4" onclick="changeLogin({{user.id}}, '{{user.login}}', '{{user.login}}')">Change login</a>
+        {% endif %}
+
         <a href="#" class="btn btn-sm btn-outline-secondary me-4" onclick="resetPassword({{user.id}}, '{{user.login}}')">Reset password</a>
-        <a href="#" class="btn btn-sm btn-outline-danger me-4" onclick="deleteUser({{user.id}}, '{{user.login}}')">Delete user</a>
+
+        {% if not user.is_primary_admin() %}
+            <a href="#" class="btn btn-sm btn-outline-danger me-4" onclick="deleteUser({{user.id}}, '{{user.login}}')">Delete user</a>
+        {% endif %}
     </div>
 </div>
 

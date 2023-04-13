@@ -1,7 +1,15 @@
+import sqlalchemy as sa
 import os
 
+from flask import request
+import sqlalchemy.orm as orm
+from sqlalchemy.orm import Session
+import sqlalchemy.ext.declarative as dec
 from urllib.parse import urlparse, urljoin
-from flask import request, url_for, abort
+
+SqlAlchemyBase = dec.declarative_base()
+
+__factory = None
 
 POSTGRES_HOST_FALLBACK = "localhost"
 POSTGRES_USER_FALLBACK = "root"
@@ -31,3 +39,25 @@ def is_safe_url(target):
     test_url = urlparse(urljoin(request.host_url, target))
 
     return test_url.scheme in ("http", "https") and ref_url.netloc == test_url.netloc
+
+
+def global_init():
+    global __factory
+
+    if __factory:
+        return
+
+    conn_str = get_db_url()
+    print(f"Connecting to the database with URL {conn_str}")
+
+    engine = sa.create_engine(conn_str, echo=False)
+    __factory = orm.sessionmaker(bind=engine)
+
+    from . import __all_models
+
+    SqlAlchemyBase.metadata.create_all(engine)
+
+
+def create_session() -> Session:
+    global __factory
+    return __factory()
