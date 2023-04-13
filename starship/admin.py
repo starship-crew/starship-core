@@ -1,7 +1,7 @@
 import sqlalchemy as sa
 
 from sqlalchemy import desc
-from models import Crew, User
+from models import Crew, DetailType, User
 from starship import login_manager
 from flask_wtf import FlaskForm
 from wtforms.validators import DataRequired
@@ -25,9 +25,12 @@ def redirect_url(default="admin_bp.dashboard"):
 @admin_bp.errorhandler(403)
 @login_required
 def forbidden(e):
-    return render_template(
-        "admin/user.html", title=f"User {current_user.login}", user=current_user
-    )
+    return render_template("admin/403.html", title=f"Forbidden")
+
+
+@admin_bp.errorhandler(404)
+def not_found(e):
+    return redirect(url_for("admin_bp.dashboard"))
 
 
 def admin_required(func):
@@ -49,6 +52,16 @@ def dashboard():
         title="Dashboard",
         users=db.session.query(User).order_by(desc(User.is_admin)).all(),
         crews=db.session.query(Crew).all(),
+    )
+
+
+@admin_bp.route("/details")
+def detail_management():
+    return render_template(
+        "admin/details.html",
+        title="Detail Management",
+        details_page=True,
+        detail_types=db.session.query(DetailType).all(),
     )
 
 
@@ -101,16 +114,6 @@ def unauthorized():
     return redirect(url_for("admin_bp.login"))
 
 
-@admin_bp.route("/toggle_admin_state/<int:user_id>")
-@admin_required
-def toggle_admin_state(user_id):
-    if current_user.id != user_id:
-        user = db.session.query(User).get(user_id)
-        user.is_admin = not user.is_admin
-        db.session.commit()
-    return redirect(redirect_url("admin_bp.dashboard"))
-
-
 class UserCreationForm(FlaskForm):
     login = StringField("Login", validators=[DataRequired()])
     password = PasswordField("Password", validators=[DataRequired()])
@@ -152,28 +155,36 @@ def user(user_id):
     return render_template("admin/user.html", title=f"User {user.login}", user=user)
 
 
-# @admin_bp.route("/user/<int:user_id>/set_currency/<new_currency>")
-# @admin_required
-# def set_user_currency(user_id, new_currency):
-#     user = db.session.query(User).get(user_id)
+@admin_bp.route("/user/<int:user_id>/toggle_admin")
+@admin_required
+def toggle_admin_state(user_id):
+    if current_user.id == user_id:
+        flash(f"Removing admin rights from the currently joined user is disallowed")
+        return redirect(redirect_url())
 
-#     if not user:
-#         return redirect(redirect_url())
+    user = db.session.query(User).get(user_id)
 
-#     try:
-#         user.currency = new_currency
-#         db.session.commit()
-#     except sa.exc.DataError as e:
-#         flash(f"Error while changing user's currency value: {e}")
+    if user.is_primary_admin():
+        flash(f"Removing admin rights from the primary admin is disallowed")
+        return redirect(redirect_url())
 
-#     return redirect(redirect_url())
+    user.is_admin = not user.is_admin
+    db.session.commit()
+
+    return redirect(redirect_url("admin_bp.dashboard"))
 
 
 @admin_bp.route("/user/<int:id>/set_<field>/<value>")
+@admin_required
 def change_user_field(id, field, value):
     user = db.session.query(User).get(id)
 
     if not user:
+        flash(f"User with id {id} not found")
+        return redirect(redirect_url())
+
+    if user.is_primary_admin() and field == "login":
+        flash(f"Can't change login of primary admin")
         return redirect(redirect_url())
 
     try:
@@ -181,7 +192,7 @@ def change_user_field(id, field, value):
             case "login":
                 user.login = value
             case "password":
-                user.password = value
+                user.set_password(value)
             case "currency":
                 user.currency = value
         db.session.commit()
@@ -189,6 +200,28 @@ def change_user_field(id, field, value):
         flash(f'User with {field} "{value}" already exists')
     except sa.exc.DataError:
         flash(f'Failed to change {field} to "{value}" cause of data processing issues')
+
+    return redirect(redirect_url())
+
+
+@admin_bp.route("/user/<int:user_id>/delete")
+@admin_required
+def delete_user(user_id):
+    user = db.session.query(User).get(user_id)
+
+    if not user:
+        flash(f"User with id {user_id} not found")
+        return redirect(redirect_url())
+
+    if user.is_primary_admin():
+        flash(f"Can't delete primary admin")
+        return redirect(redirect_url())
+
+    try:
+        db.session.delete(user)
+        db.session.commit()
+    except sa.exc.SQLAlchemyError as e:
+        flash(f"Error while deleting user with id {user_id}: {e}")
 
     return redirect(redirect_url())
 

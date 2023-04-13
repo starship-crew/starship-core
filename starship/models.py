@@ -40,6 +40,9 @@ class User(UserMixin, db.Model):
     def check_password(self, password):
         return check_password_hash(self.password, password)
 
+    def is_primary_admin(self):
+        return self.login == "admin" and self.is_admin
+
 
 class Sentence(db.Model):
     __tablename__ = "sentences"

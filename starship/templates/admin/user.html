@@ -16,7 +16,7 @@
                 <span class="badge bg-danger">admin</a>
             {% endif %}
         {% endif %}
-    </h2>
+    </h3>
     <div class="d-flex">
         {% if current_user.id != user.id %}
         <a href="{{ url_for('admin_bp.toggle_admin_state', user_id=user.id) }}" class="btn btn-sm btn-outline-danger me-4">
@@ -30,6 +30,7 @@
         <a href="#" class="btn btn-sm btn-outline-primary me-4" onclick="changeCurrency({{user.id}}, '{{user.login}}', {{user.currency}})">Change currency value</a>
         <a href="#" class="btn btn-sm btn-outline-secondary me-4" onclick="changeLogin({{user.id}}, '{{user.login}}', '{{user.login}}')">Change login</a>
         <a href="#" class="btn btn-sm btn-outline-secondary me-4" onclick="resetPassword({{user.id}}, '{{user.login}}')">Reset password</a>
+        <a href="#" class="btn btn-sm btn-outline-danger me-4" onclick="deleteUser({{user.id}}, '{{user.login}}')">Delete user</a>
     </div>
 </div>
 

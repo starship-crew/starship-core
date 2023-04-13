@@ -34,3 +34,12 @@ function resetPassword(user_id, user_login) {
         window.location = url;
     }
 }
+
+function deleteUser(user_id, user_login) {
+    let sure = confirm(`Confirm deletion of user ${user_id}/${user_login}`);
+    if (sure) {
+        const user_url = `${index}/user/${user_id}`;
+        const url = `${user_url}/delete`;
+        window.location = url;
+    }
+}
