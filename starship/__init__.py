@@ -40,6 +40,10 @@ def make_app():
 
     app = Flask(__name__)
 
+    @app.teardown_appcontext
+    def shutdown_session(exception=None):
+        db_session.remove()
+
     app.config["SECRET_KEY"] = get_secret_key()
 
     db_session.global_init()

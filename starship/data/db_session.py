@@ -50,12 +50,22 @@ def global_init():
     conn_str = get_db_url()
     print(f"Connecting to the database with URL {conn_str}")
 
-    engine = sa.create_engine(conn_str, echo=False)
+    engine = sa.create_engine(
+        conn_str,
+        echo=False,
+    )
+    engine.update_execution_options(**{"connect_args": {"connect_timeout": 5}})
     __factory = orm.sessionmaker(bind=engine)
 
     from . import __all_models
 
     SqlAlchemyBase.metadata.create_all(engine)
+
+
+def remove():
+    global __factory
+    if __factory:
+        __factory.close_all()
 
 
 def create_session() -> Session:
