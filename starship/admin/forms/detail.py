@@ -2,12 +2,13 @@ import yaml
 
 from flask_wtf import FlaskForm
 from wtforms.validators import DataRequired, ValidationError
-from wtforms import (
+from wtforms.fields import (
+    SelectField,
     BooleanField,
+    IntegerField,
     SubmitField,
     TextAreaField,
 )
-
 
 # try using fast LibYAML C library for parsing yaml and falling back to pure
 # Python implementation
@@ -36,4 +37,27 @@ class DetailTypeCreationForm(FlaskForm):
     name = TextAreaField("Name", validators=[DataRequired(), YamlValidator()])
     description = TextAreaField("Description", validators=[YamlValidator()])
     required = BooleanField("Required by any ship to work", default=False)
+    submit = SubmitField("Create")
+
+
+DEFAULT_DETAIL_CHARS_TEXTAREA_VALUE = """power_generation: 0
+power_consumption: 0
+accel_factor: 0.0
+damage_absorption: 0
+damage: 0"""
+
+
+class DetailCreationForm(FlaskForm):
+    name = TextAreaField("Name", validators=[DataRequired(), YamlValidator()])
+    description = TextAreaField("Description", validators=[YamlValidator()])
+    kind = SelectField(
+        "Type", validate_choice=False, coerce=int, validators=[DataRequired()]
+    )
+    cost = IntegerField("Cost", default=0, validators=[DataRequired()])
+    health = IntegerField("Health", default=0, validators=[DataRequired()])
+    chars = TextAreaField(
+        "Characteristics",
+        validators=[YamlValidator()],
+        default=DEFAULT_DETAIL_CHARS_TEXTAREA_VALUE,
+    )
     submit = SubmitField("Create")

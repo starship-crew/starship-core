@@ -1,0 +1,44 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+<form class="container-fluid w-50" method="post" action="{{ url_for('admin_bp.edit_detail_type', id=dt.id) }}" novalidate>
+    {{ form.hidden_tag() }}
+
+    <h1>Edit Detail</h1>
+
+    <p>
+        {{ form.name.label }}<br>
+        <textarea class="form-control" name="{{form.name.name}}" id="{{form.name.id}}"
+                  placeholder="en: Detail type name example\nru: Пример наименования типа детали">
+            {{- dt.name.to_yaml_string() -}}
+        </textarea><br>
+        {% for error in form.name.errors %}
+        <div class="alert alert-danger" role="alert">
+            {{ error }}
+        </div>
+        {% endfor %}
+    </p>
+
+    <p>
+        {{ form.description.label }}<br>
+        <textarea class="form-control" name="{{form.description.name}}" id="{{form.description.id}}"
+                  placeholder="en: Detail type description example\nru: Пример описания типа детали">
+            {{- dt.description.to_yaml_string() -}}
+        </textarea><br>
+        {% for error in form.description.errors %}
+        <div class="alert alert-danger" role="alert">
+            {{ error }}
+        </div>
+        {% endfor %}
+    </p>
+
+    <p><input type="checkbox" name="{{form.required.name}}" id="{{form.required.id}}" {% if dt.required %}checked{% endif %}> {{ form.required.label }}</p>
+
+    <div class="d-flex">
+        {{ form.submit(type="submit", class="btn btn-outline-warning me-3", value="Edit") }}
+        <a href="{{url_for('admin_bp.detail_type', id=dt.id)}}" class="btn btn-outline-info">Cancel</a>
+    </div>
+</form>
+
+{% endblock %}

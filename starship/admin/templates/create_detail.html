@@ -1,0 +1,73 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+<form class="container-fluid w-50" method="post" action="{{ url_for('admin_bp.create_detail') }}" novalidate>
+    {{ form.hidden_tag() }}
+
+    <h1>Create a new Detail</h1>
+
+    <p>
+        {{ form.name.label }}<br>
+        {{ form.name(class="form-control", placeholder="en: Detail name example\nru: Пример наименования детали") }}<br>
+        {% for error in form.name.errors %}
+        <div class="alert alert-danger" role="alert">
+            {{ error }}
+        </div>
+        {% endfor %}
+    </p>
+
+    <p>
+        {{ form.description.label }}<br>
+        {{ form.description(class="form-control", placeholder="en: Detail description example\nru: Пример описания детали") }}<br>
+        {% for error in form.description.errors %}
+        <div class="alert alert-danger" role="alert">
+            {{ error }}
+        </div>
+        {% endfor %}
+    </p>
+
+    <p>
+        {{ form.kind.label }}<br>
+        {{ form.kind(class="form-control") }}<br>
+        {% for error in form.kind.errors %}
+        <div class="alert alert-danger" role="alert">
+            {{ error }}
+        </div>
+        {% endfor %}
+    </p>
+
+    <p>
+        {{ form.cost.label }}<br>
+        {{ form.cost(class="form-control") }}<br>
+        {% for error in form.cost.errors %}
+        <div class="alert alert-danger" role="alert">
+            {{ error }}
+        </div>
+        {% endfor %}
+    </p>
+
+    <p>
+        {{ form.health.label }}<br>
+        {{ form.health(class="form-control") }}<br>
+        {% for error in form.health.errors %}
+        <div class="alert alert-danger" role="alert">
+            {{ error }}
+        </div>
+        {% endfor %}
+    </p>
+
+    <p>
+        {{ form.chars.label }}<br>
+        {{ form.chars(class="form-control", rows="10") }}<br>
+        {% for error in form.chars.errors %}
+        <div class="alert alert-danger" role="alert">
+            {{ error }}
+        </div>
+        {% endfor %}
+    </p>
+
+    <p>{{ form.submit(type="submit", class="btn btn-success") }}</p>
+</form>
+
+{% endblock %}

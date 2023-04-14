@@ -7,7 +7,7 @@ from .helpers import admin_required, redirect_url
 from starship.data.sentence import Sentence
 from starship.data.detail_type import DetailType
 from starship.data.detail import Detail
-from .forms.detail import DetailTypeCreationForm
+from .forms.detail import DetailCreationForm, DetailTypeCreationForm
 
 try:
     from yaml import CBaseLoader as YamlLoader
@@ -50,12 +50,6 @@ def detail_management():
 
 
 def yaml_to_sentence(text, sentence=None):
-    """YAML text to the Sentence.
-    For example, string
-    "en: ABC
-    ru: АБВ"
-    will be converted to Sentence(en="ABC", ru="АБВ")."""
-
     if not sentence:
         sentence = Sentence()
 
@@ -155,6 +149,119 @@ def delete_detail_type(id):
 
     try:
         db_sess.delete(dt)
+        db_sess.commit()
+    except sa.exc.SQLAlchemyError as e:
+        flash(f"Error while deleting detail_type with id {id}: {e}")
+
+    return redirect(url_for("admin_bp.detail_management"))
+
+
+def apply_yaml_chars_on_detail(detail, chars):
+    pyobj = yaml.load(chars, YamlLoader).items()
+
+    for lang, value in pyobj:
+        detail.__setattr__(lang, value)
+
+
+@admin_bp.route("/create_detail", methods=["GET", "POST"])
+@admin_required
+def create_detail():
+    db_sess = db_session.create_session()
+    form = DetailCreationForm()
+    lang = get_lang()
+
+    form.kind.choices = [
+        (dt.id, dt.name.__getattribute__(lang))
+        for dt in db_sess.query(DetailType).all()
+    ]
+
+    if form.validate_on_submit():
+        detail = Detail()
+        detail.name = yaml_to_sentence(form.name.data)
+        detail.description = (
+            yaml_to_sentence(form.description.data)
+            if form.description.data
+            else Sentence()
+        )
+        detail.kind_id = form.kind.data
+        detail.cost = form.cost.data
+        detail.health = form.health.data
+        apply_yaml_chars_on_detail(detail, form.chars.data)
+
+        db_sess.add(detail)
+        db_sess.commit()
+
+        return redirect(url_for("admin_bp.detail_management"))
+
+    return render_template(
+        "create_detail.html",
+        form=form,
+        title="Detail creation",
+        details_page=True,
+    )
+
+
+@admin_bp.route("/detail/<int:id>")
+@admin_required
+def detail(id):
+    db_sess = db_session.create_session()
+    detail = db_sess.query(Detail).get(id)
+    if not detail:
+        flash(f"Detail with id {id} not found")
+        return redirect(redirect_url())
+    return render_template(
+        "detail.html",
+        title=detail.name.en,
+        lang=get_lang(),
+        detail=detail,
+        details_page=True,
+    )
+
+
+@admin_bp.route("/detail/<int:id>/edit", methods=["GET", "POST"])
+@admin_required
+def edit_detail(id):
+    db_sess = db_session.create_session()
+    detail = db_sess.query(Detail).get(id)
+
+    if not detail:
+        flash(f"Detail with id {id} not found")
+        return redirect(redirect_url())
+
+    form = DetailCreationForm()
+
+    if form.validate_on_submit():
+        detail.name = yaml_to_sentence(form.name.data, detail.name)
+        detail.description = (
+            yaml_to_sentence(form.description.data, detail.description)
+            if form.description.data
+            else Sentence()
+        )
+        detail.required = form.required.data
+        db_sess.commit()
+        return redirect(url_for("admin_bp.detail", id=id))
+
+    return render_template(
+        "edit_detail.html",
+        title="Edit Detail",
+        form=form,
+        detail=detail,
+        details_page=True,
+    )
+
+
+@admin_bp.route("/detail/<int:id>/delete")
+@admin_required
+def delete_detail(id):
+    db_sess = db_session.create_session()
+    detail = db_sess.query(Detail).get(id)
+
+    if not detail:
+        flash(f"Detail with id {id} not found")
+        return redirect(redirect_url())
+
+    try:
+        db_sess.delete(detail)
         db_sess.commit()
     except sa.exc.SQLAlchemyError as e:
         flash(f"Error while deleting detail_type with id {id}: {e}")
