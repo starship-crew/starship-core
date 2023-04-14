@@ -3,6 +3,7 @@ import yaml
 from flask_wtf import FlaskForm
 from wtforms.validators import DataRequired, ValidationError
 from wtforms import (
+    BooleanField,
     SubmitField,
     TextAreaField,
 )
@@ -34,4 +35,5 @@ class YamlValidator:
 class DetailTypeCreationForm(FlaskForm):
     name = TextAreaField("Name", validators=[DataRequired(), YamlValidator()])
     description = TextAreaField("Description", validators=[YamlValidator()])
+    required = BooleanField("Required by any ship to work", default=False)
     submit = SubmitField("Create")

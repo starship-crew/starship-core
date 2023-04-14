@@ -27,6 +27,7 @@
         {% endfor %}
     </p>
 
+    <p>{{ form.required() }} {{ form.required.label }}</p>
 
     <p>{{ form.submit(type="submit", class="btn btn-success") }}</p>
 </form>

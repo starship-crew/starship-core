@@ -6,5 +6,4 @@ from . import detail_copy
 from . import detail_copy_groups
 from . import detail
 from . import detail_type
-from . import required_ship_detail
 from . import sentence

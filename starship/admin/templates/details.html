@@ -24,13 +24,27 @@
         <tbody>
             {% for detail_type in detail_types %}
                 <tr>
-                    {% if lang == "en" %}
-                        <td>{{detail_type.name.en}}</td>
-                        <td>{{detail_type.description.en}}</td>
-                    {% elif lang == "ru" %}
-                        <td>{{detail_type.name.ru}}</td>
-                        <td>{{detail_type.description.ru}}</td>
-                    {% endif %}
+                    <td>
+                        {% if lang == "en" %}
+                            {{detail_type.name.en}}
+                        {% elif lang == "ru" %}
+                            {{detail_type.name.ru}}
+                        {% endif %}
+                        {% if detail_type.required %}
+                            <span class="badge bg-warning"
+                                data-bs-toggle="tooltip"
+                                data-bs-title="Every ship must have a detail of this type to work">
+                                Required
+                            </span>
+                        {% endif %}
+                    </td>
+                    <td>
+                        {% if lang == "en" %}
+                            {{detail_type.description.en}}
+                        {% elif lang == "ru" %}
+                            {{detail_type.description.ru}}
+                        {% endif %}
+                    </td>
                 </tr>
             {% endfor %}
         </tbody>

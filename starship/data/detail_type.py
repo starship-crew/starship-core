@@ -14,5 +14,7 @@ class DetailType(SqlAlchemyBase):
     description_id = sa.Column(sa.Integer, sa.ForeignKey("sentences.id"))
     description = sa.orm.relationship("Sentence", foreign_keys=[description_id])
 
+    required = sa.Column(sa.Boolean, default=False)
+
     def __repr__(self):
         return f"DetailType(id={self.id!r}, name={self.name!r}, description={self.description!r})"
