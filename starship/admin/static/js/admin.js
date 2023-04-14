@@ -43,3 +43,16 @@ function deleteUser(user_id, user_login) {
         window.location = url;
     }
 }
+
+function gotoDetailType(id, lang) {
+    window.location = `${index}/detail_type/${id}?lang=${lang}`;
+}
+
+function deleteDetailType(id, name) {
+    let sure = confirm(`Confirm deletion of detail type "${name}" with id ${id}`);
+    if (sure) {
+        const dt_url = `${index}/detail_type/${id}`;
+        const url = `${dt_url}/delete`;
+        window.location = url;
+    }
+}

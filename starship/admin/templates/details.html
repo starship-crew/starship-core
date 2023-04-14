@@ -23,7 +23,7 @@
         </thead>
         <tbody>
             {% for detail_type in detail_types %}
-                <tr>
+                <tr style="cursor: pointer;" onclick="gotoDetailType({{detail_type.id}}, '{{lang}}')">
                     <td>
                         {% if lang == "en" %}
                             {{detail_type.name.en}}
