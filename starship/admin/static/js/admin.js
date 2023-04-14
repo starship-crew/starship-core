@@ -56,3 +56,12 @@ function deleteDetailType(id, name) {
         window.location = url;
     }
 }
+
+function deleteDetail(id, name) {
+    let sure = confirm(`Confirm deletion of detail "${name}" with id ${id}`);
+    if (sure) {
+        const dt_url = `${index}/detail/${id}`;
+        const url = `${dt_url}/delete`;
+        window.location = url;
+    }
+}

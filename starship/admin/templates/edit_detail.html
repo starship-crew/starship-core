@@ -2,7 +2,7 @@
 
 {% block content %}
 
-<form class="container-fluid w-50" method="post" action="{{ url_for('admin_bp.edit_detail_type', id=dt.id) }}" novalidate>
+<form class="container-fluid w-50" method="post" action="{{ url_for('admin_bp.edit_detail', id=detail.id) }}" novalidate>
     {{ form.hidden_tag() }}
 
     <h1>Edit Detail</h1>
@@ -11,7 +11,7 @@
         {{ form.name.label }}<br>
         <textarea class="form-control" name="{{form.name.name}}" id="{{form.name.id}}"
                   placeholder="en: Detail type name example\nru: Пример наименования типа детали">
-            {{- dt.name.to_yaml_string() -}}
+            {{- detail.name.to_yaml_string() -}}
         </textarea><br>
         {% for error in form.name.errors %}
         <div class="alert alert-danger" role="alert">
@@ -24,7 +24,7 @@
         {{ form.description.label }}<br>
         <textarea class="form-control" name="{{form.description.name}}" id="{{form.description.id}}"
                   placeholder="en: Detail type description example\nru: Пример описания типа детали">
-            {{- dt.description.to_yaml_string() -}}
+            {{- detail.description.to_yaml_string() -}}
         </textarea><br>
         {% for error in form.description.errors %}
         <div class="alert alert-danger" role="alert">
@@ -33,11 +33,52 @@
         {% endfor %}
     </p>
 
-    <p><input type="checkbox" name="{{form.required.name}}" id="{{form.required.id}}" {% if dt.required %}checked{% endif %}> {{ form.required.label }}</p>
+    <p>
+        {{ form.kind.label }}<br>
+        {{ form.kind(class="form-control") }}<br>
+        {% for error in form.kind.errors %}
+        <div class="alert alert-danger" role="alert">
+            {{ error }}
+        </div>
+        {% endfor %}
+    </p>
+
+    <p>
+        {{ form.cost.label }}<br>
+        {{ form.cost(class="form-control", value=detail.cost) }}<br>
+        {% for error in form.cost.errors %}
+        <div class="alert alert-danger" role="alert">
+            {{ error }}
+        </div>
+        {% endfor %}
+    </p>
+
+    <p>
+        {{ form.health.label }}<br>
+        {{ form.health(class="form-control", value=detail.health) }}<br>
+        {% for error in form.health.errors %}
+        <div class="alert alert-danger" role="alert">
+            {{ error }}
+        </div>
+        {% endfor %}
+    </p>
+
+    <p>
+        {{ form.chars.label }}<br>
+        <textarea class="form-control" name="{{form.chars.name}}" id="{{form.chars.id}}" rows="10">
+            {{- detail.chars_to_yaml() -}}
+        </textarea><br>
+        {% for error in form.chars.errors %}
+        <div class="alert alert-danger" role="alert">
+            {{ error }}
+        </div>
+        {% endfor %}
+    </p>
+
 
     <div class="d-flex">
         {{ form.submit(type="submit", class="btn btn-outline-warning me-3", value="Edit") }}
-        <a href="{{url_for('admin_bp.detail_type', id=dt.id)}}" class="btn btn-outline-info">Cancel</a>
+        <a href="{{url_for('admin_bp.detail_management')}}" class="btn btn-outline-info">Cancel</a>
     </div>
 </form>
 

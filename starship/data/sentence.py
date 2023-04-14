@@ -14,6 +14,12 @@ class Sentence(SqlAlchemyBase):
     def __repr__(self):
         return f"Sentence(id={self.id!r}, en={self.en!r}, ru={self.ru!r})"
 
+    def set(self, lang, value):
+        return self.__setattr__(lang, value)
+
+    def get(self, lang):
+        return self.__getattribute__(lang)
+
     def to_yaml_string(self):
         obj = {"en": self.en, "ru": self.ru}
         return yaml.dump(obj, allow_unicode=True)

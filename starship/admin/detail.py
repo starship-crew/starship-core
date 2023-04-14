@@ -126,7 +126,7 @@ def edit_detail_type(id):
         )
         dt.required = form.required.data
         db_sess.commit()
-        return redirect(url_for("admin_bp.detail_type", id=id))
+        return redirect(url_for("admin_bp.detail_management"))
 
     return render_template(
         "edit_detail_type.html",
@@ -201,23 +201,6 @@ def create_detail():
     )
 
 
-@admin_bp.route("/detail/<int:id>")
-@admin_required
-def detail(id):
-    db_sess = db_session.create_session()
-    detail = db_sess.query(Detail).get(id)
-    if not detail:
-        flash(f"Detail with id {id} not found")
-        return redirect(redirect_url())
-    return render_template(
-        "detail.html",
-        title=detail.name.en,
-        lang=get_lang(),
-        detail=detail,
-        details_page=True,
-    )
-
-
 @admin_bp.route("/detail/<int:id>/edit", methods=["GET", "POST"])
 @admin_required
 def edit_detail(id):
@@ -229,6 +212,13 @@ def edit_detail(id):
         return redirect(redirect_url())
 
     form = DetailCreationForm()
+    lang = get_lang()
+
+    form.kind.choices = [
+        (dt.id, dt.name.__getattribute__(lang))
+        for dt in db_sess.query(DetailType).all()
+    ]
+    form.kind.data = detail.kind_id
 
     if form.validate_on_submit():
         detail.name = yaml_to_sentence(form.name.data, detail.name)
@@ -237,9 +227,13 @@ def edit_detail(id):
             if form.description.data
             else Sentence()
         )
-        detail.required = form.required.data
+        detail.kind_id = form.kind.data
+        detail.cost = form.cost.data
+        detail.health = form.health.data
+        apply_yaml_chars_on_detail(detail, form.chars.data)
+
         db_sess.commit()
-        return redirect(url_for("admin_bp.detail", id=id))
+        return redirect(url_for("admin_bp.detail_management", id=id))
 
     return render_template(
         "edit_detail.html",

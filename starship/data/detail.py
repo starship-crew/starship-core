@@ -1,3 +1,4 @@
+import yaml
 import sqlalchemy as sa
 
 from .db_session import SqlAlchemyBase
@@ -27,3 +28,12 @@ class Detail(SqlAlchemyBase):
 
     def __repr__(self):
         return f"Detail(id={self.id!r}, name={self.name!r}, description={self.description!r}, kind={self.kind!r}, cost={self.cost!r}, ...)"
+
+    def chars_to_yaml(self):
+        obj = {
+            "power_generation": self.power_generation,
+            "accel_factor": self.accel_factor,
+            "damage_absorption": self.damage_absorption,
+            "damage": self.damage,
+        }
+        return yaml.dump(obj, allow_unicode=True)
