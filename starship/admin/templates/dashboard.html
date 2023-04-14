@@ -72,19 +72,20 @@
         <div class="container-fluid p-0" style="margin-left: 1rem;">
             <h2>Ships</h2>
             <div class="list-group">
-                <div class="list-group-item list-group-item-action">
-                    <div class="d-flex w-100 justify-content-between">
-                        <div class="d-flex flex-wrap align-content-center">
-                            <h5 class="mb-1" onclick="navigator.clipboard.writeText('1')">1</h5>
-                            <span> / </span>
-                            <h5 class="mb-1" onclick="navigator.clipboard.writeText('Crew1')">Crew1</h5>
-                        </div>
-                        <div class="d-flex flex-column">
-                            <button class="btn" onclick="navigator.clipboard.writeText('token')">Copy Token</small>
-                            <button class="btn" onclick="navigator.clipboard.writeText('token')">Watch Ship</small>
+                {% for ship in ships %}
+                    <div class="list-group-item list-group-item-action">
+                        <div class="d-flex w-100 justify-content-between">
+                            <div class="d-flex flex-wrap align-content-center">
+                                <h5 class="mb-1" onclick="navigator.clipboard.writeText('1')">{{ship.crew.id}}</h5>
+                                <span> / </span>
+                                <h5 class="mb-1" onclick="navigator.clipboard.writeText('Crew1')">{{ship.crew.name}}</h5>
+                            </div>
+                            <div class="d-flex flex-column">
+                                <a href="#" class="btn">Watch Ship</small>
+                            </div>
                         </div>
                     </div>
-                </div>
+                {% endfor %}
             </div>
         </div>
     </div>

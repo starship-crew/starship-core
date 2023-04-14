@@ -1,3 +1,4 @@
+from starship.data.ship import Ship
 from starship.data.user import User
 from starship.data.crew import Crew
 from starship.data import db_session
@@ -17,4 +18,5 @@ def dashboard():
         title="Dashboard",
         users=db_sess.query(User).order_by(desc(User.is_admin)).all(),
         crews=db_sess.query(Crew).all(),
+        ships=db_sess.query(Ship).all(),
     )

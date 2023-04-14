@@ -12,7 +12,7 @@ class Crew(SqlAlchemyBase):
     token = sa.Column(sa.String(255), unique=True)
     name = sa.Column(sa.String(255), unique=True)
 
-    ship = sa.orm.relationship("Ship", back_populates="crew")
+    ship = sa.orm.relationship("Ship", uselist=False, back_populates="crew")
 
     owners: sa.orm.Mapped[List["User"]] = sa.orm.relationship(
         secondary="crew_groups",

@@ -65,3 +65,11 @@ function deleteDetail(id, name) {
         window.location = url;
     }
 }
+
+function createCrew() {
+    let name = prompt("Type a name of the crew to create");
+    if (name) {
+        const url = `${index}/create_crew/${name}`;
+        window.location = url;
+    }
+}

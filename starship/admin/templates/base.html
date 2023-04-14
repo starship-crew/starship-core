@@ -32,12 +32,11 @@
                             <div class="dropdown-menu">
                                 <h6 class="dropdown-header">Create an entity</h6>
                                 {% if not details_page %}
-                                <a class="dropdown-item" href="{{ url_for('admin_bp.create_user') }}">User</a>
-                                <a class="dropdown-item" href="{{ url_for('admin_bp.create_crew') }}">Crew</a>
-                                <a class="dropdown-item" href="{{ url_for('admin_bp.create_ship') }}">Ship</a>
+                                    <a class="dropdown-item" href="{{ url_for('admin_bp.create_user') }}">User</a>
+                                    <a class="dropdown-item" href="#" onclick="createCrew()">Crew</a>
                                 {% else %}
-                                <a class="dropdown-item" href="{{ url_for('admin_bp.create_detail_type') }}">Detail Type</a>
-                                <a class="dropdown-item" href="{{ url_for('admin_bp.create_detail') }}">Detail</a>
+                                    <a class="dropdown-item" href="{{ url_for('admin_bp.create_detail_type') }}">Detail Type</a>
+                                    <a class="dropdown-item" href="{{ url_for('admin_bp.create_detail') }}">Detail</a>
                                 {% endif %}
                             </div>
                         </div>
