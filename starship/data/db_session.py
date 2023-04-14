@@ -47,14 +47,8 @@ def global_init():
     if __factory:
         return
 
-    conn_str = get_db_url()
-    print(f"Connecting to the database with URL {conn_str}")
-
-    engine = sa.create_engine(
-        conn_str,
-        echo=False,
-    )
-    engine.update_execution_options(**{"connect_args": {"connect_timeout": 5}})
+    engine = sa.create_engine(get_db_url(), echo=False)
+    engine.update_execution_options(connect_args={"connect_timeout": 5})
     __factory = orm.sessionmaker(bind=engine)
 
     from . import __all_models
