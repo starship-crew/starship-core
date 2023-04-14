@@ -6,6 +6,7 @@ from .blueprint import admin_bp
 from .helpers import admin_required, redirect_url
 from starship.data.sentence import Sentence
 from starship.data.detail_type import DetailType
+from starship.data.detail import Detail
 from .forms.detail import DetailTypeCreationForm
 
 try:
@@ -27,12 +28,24 @@ def get_lang():
 @admin_required
 def detail_management():
     db_sess = db_session.create_session()
+
+    detail_types = db_sess.query(DetailType).all()
+    details = {}
+    for detail_type in detail_types:
+        details[detail_type] = (
+            db_sess.query(Detail)
+            .filter_by(kind=detail_type)
+            .order_by(Detail.cost)
+            .all()
+        )
+
     return render_template(
         "details.html",
         title="Detail Management",
         details_page=True,
         lang=get_lang(),
         detail_types=db_sess.query(DetailType).all(),
+        details=details,
     )
 
 
