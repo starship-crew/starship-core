@@ -53,7 +53,7 @@ class DetailCreationForm(FlaskForm):
     kind = SelectField(
         "Type", validate_choice=False, coerce=int, validators=[DataRequired()]
     )
-    cost = IntegerField("Cost", default=0)
+    cost = IntegerField("Cost (set to 0 to mark detail as a starter one)", default=0)
     health = IntegerField("Health", default=0)
     chars = TextAreaField(
         "Characteristics",
