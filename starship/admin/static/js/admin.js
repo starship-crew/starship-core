@@ -8,15 +8,6 @@ function gotoUser(id) {
     window.location = `${index}/user/${id}`;
 }
 
-function changeCurrency(user_id, user_login, old_currency) {
-    let currency = prompt(`Enter a new currency value for ${user_login}`, old_currency);
-    if (currency != null && parseInt(currency) != NaN) {
-        const user_url = `${index}/user/${user_id}`;
-        let url = `${user_url}/set_currency/${currency}`;
-        window.location = url;
-    }
-}
-
 function changeLogin(user_id, user_login, old_login) {
     let login = prompt(`Type a new login for user ${user_login}`, old_login);
     if (login != null) {
@@ -81,6 +72,15 @@ function linkUserWithCrew(user_id) {
     let crew_id = prompt("Enter id of the crew to link with")
     if (crew_id) {
         const url = `${index}/crew/${crew_id}/link?users=${user_id}`;
+        window.location = url;
+    }
+}
+
+function changeCurrency(crew_id, crew_name) {
+    let currency = prompt(`Enter a new currency value for crew ${crew_id}/${crew_name}`);
+    if (currency != null && parseInt(currency) != NaN) {
+        const crew_url = `${index}/crew/${crew_id}`;
+        let url = `${crew_url}/set_currency/${currency}`;
         window.location = url;
     }
 }

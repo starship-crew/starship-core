@@ -23,7 +23,6 @@ def create_user():
             user = User()
             user.login = form.login.data
             user.set_password(form.password.data)
-            user.currency = form.currency.data
             user.is_admin = form.is_admin.data
 
             db_sess.add(user)
@@ -86,8 +85,6 @@ def change_user_field(id, field, value):
                 user.login = value
             case "password":
                 user.set_password(value)
-            case "currency":
-                user.currency = value
         db_sess.commit()
     except sa.exc.IntegrityError:
         flash(f'User with {field} "{value}" already exists')

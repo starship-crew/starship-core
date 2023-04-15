@@ -12,7 +12,6 @@ class User(UserMixin, SqlAlchemyBase):
     id = sa.Column(sa.Integer, primary_key=True, autoincrement=True)
     login = sa.Column(sa.String, unique=True)
     password = sa.Column(sa.String, unique=False)
-    currency = sa.Column(sa.Integer, default=0)
     is_admin = sa.Column(sa.Boolean)
     crews: sa.orm.Mapped[Set["Crew"]] = sa.orm.relationship(secondary="crew_groups")
 

@@ -11,6 +11,7 @@ class Crew(SqlAlchemyBase):
 
     token = sa.Column(sa.String(255), unique=True)
     name = sa.Column(sa.String(255), unique=True)
+    currency = sa.Column(sa.Integer, default=0)
 
     ship = sa.orm.relationship("Ship", uselist=False, back_populates="crew")
 
@@ -20,4 +21,4 @@ class Crew(SqlAlchemyBase):
     )
 
     def __repr__(self):
-        return f"Crew(name={self.name!r}, ship={self.ship!r}, token={self.token!r}, owner={self.owner!r})"
+        return f"Crew(name={self.name!r}, currency={self.currency!r}, ship={self.ship!r}, token={self.token!r}, owner={self.owner!r})"

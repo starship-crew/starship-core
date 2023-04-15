@@ -16,6 +16,25 @@ def create_crew(name):
     return redirect(redirect_url())
 
 
+@admin_bp.route("/crew/<int:id>/set_currency/<value>")
+@admin_required
+def change_crew_currency(id, value):
+    db_sess = db_session.create_session()
+    crew = db_sess.query(Crew).get(id)
+
+    if not crew:
+        flash(f"Crew with id {id} not found")
+        return redirect(redirect_url())
+
+    try:
+        crew.currency = value
+        db_sess.commit()
+    except sa.exc.DataError:
+        flash(f'Failed to change currency to "{value}" cause of data processing issues')
+
+    return redirect(redirect_url())
+
+
 @admin_bp.route("/crew/<int:id>/link")
 @admin_required
 def link_crew(id):

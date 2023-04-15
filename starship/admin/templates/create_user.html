@@ -27,16 +27,6 @@
         {% endfor %}
     </p>
 
-    <p>
-        {{ form.currency.label }}<br>
-        {{ form.currency(class="form-control", type="number") }}<br>
-        {% for error in form.currency.errors %}
-        <div class="alert alert-danger" role="alert">
-            {{ error }}
-        </div>
-        {% endfor %}
-    </p>
-
     <p>{{ form.is_admin() }} {{ form.is_admin.label }}</p>
 
     <p>{{ form.submit(type="submit", class="btn btn-success") }}</p>
