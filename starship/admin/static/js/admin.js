@@ -66,10 +66,21 @@ function deleteDetail(id, name) {
     }
 }
 
-function createCrew() {
+function createCrew(linked_users = null) {
     let name = prompt("Type a name of the crew to create");
     if (name) {
-        const url = `${index}/create_crew/${name}`;
+        let url = `${index}/create_crew/${name}`;
+        if (linked_users != null) {
+            url += `?linked_users=${linked_users}`
+        }
+        window.location = url;
+    }
+}
+
+function linkUserWithCrew(user_id) {
+    let crew_id = prompt("Enter id of the crew to link with")
+    if (crew_id) {
+        const url = `${index}/crew/${crew_id}/link?users=${user_id}`;
         window.location = url;
     }
 }

@@ -36,25 +36,25 @@ def create_user():
     return render_template("create_user.html", form=form, title="User creation")
 
 
-@admin_bp.route("/user/<int:user_id>")
+@admin_bp.route("/user/<int:id>")
 @admin_required
-def user(user_id):
+def user(id):
     db_sess = db_session.create_session()
-    user = db_sess.query(User).get(user_id)
+    user = db_sess.query(User).get(id)
     if not user:
         return abort(404)
     return render_template("user.html", title=f"User {user.login}", user=user)
 
 
-@admin_bp.route("/user/<int:user_id>/toggle_admin")
+@admin_bp.route("/user/<int:id>/toggle_admin")
 @admin_required
-def toggle_admin_state(user_id):
-    if current_user.id == user_id:
+def toggle_admin_state(id):
+    if current_user.id == id:
         flash(f"Removing admin rights from the currently joined user is disallowed")
         return redirect(redirect_url())
 
     db_sess = db_session.create_session()
-    user = db_sess.query(User).get(user_id)
+    user = db_sess.query(User).get(id)
 
     if user.is_primary_admin():
         flash(f"Removing admin rights from the primary admin is disallowed")
@@ -97,14 +97,14 @@ def change_user_field(id, field, value):
     return redirect(redirect_url())
 
 
-@admin_bp.route("/user/<int:user_id>/delete")
+@admin_bp.route("/user/<int:id>/delete")
 @admin_required
-def delete_user(user_id):
+def delete_user(id):
     db_sess = db_session.create_session()
-    user = db_sess.query(User).get(user_id)
+    user = db_sess.query(User).get(id)
 
     if not user:
-        flash(f"User with id {user_id} not found")
+        flash(f"User with id {id} not found")
         return redirect(redirect_url())
 
     if user.is_primary_admin():
@@ -115,6 +115,6 @@ def delete_user(user_id):
         db_sess.delete(user)
         db_sess.commit()
     except sa.exc.SQLAlchemyError as e:
-        flash(f"Error while deleting user with id {user_id}: {e}")
+        flash(f"Error while deleting user with id {id}: {e}")
 
     return redirect(redirect_url())

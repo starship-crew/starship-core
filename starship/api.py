@@ -7,7 +7,9 @@ from starship.data.ship import Ship
 from starship.data.detail import Detail
 from starship.data.detail_copy import DetailCopy
 
-from flask import Blueprint
+from flask import Blueprint, request
+
+from starship.data.user import User
 
 
 api_bp = Blueprint("api_bp", __name__, url_prefix="/api")
@@ -38,7 +40,20 @@ def create_crew(name):
     crew.name = name
     crew.ship = ship
 
+    linked_users = set()
+    if user_ids := request.args.get("linked_users", None):
+        try:
+            user_ids = set(map(int, user_ids.split(",")))
+        except ValueError:
+            return {
+                "status": -1,
+                "reason": "Could not convert provided user identifiers to integers",
+            }
+        for user in db_sess.query(User).filter(User.id.in_(user_ids)):
+            crew.owners.add(user)
+            linked_users.add(user.id)
+
     db_sess.add(crew)
     db_sess.commit()
 
-    return {"status": 0, "token": token}
+    return {"status": 0, "token": token, "linked_users": linked_users}

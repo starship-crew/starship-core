@@ -24,7 +24,7 @@
                     </td>
                     <td class="text-center">
                             <a
-                                href="{{ url_for('admin_bp.toggle_admin_state', user_id=user.id) }}"
+                                href="{{ url_for('admin_bp.toggle_admin_state', id=user.id) }}"
                                 class="btn badge bg-{%- if user.is_admin -%}danger{%- else -%}secondary{%- endif -%} {%- if current_user.id == user.id %} disabled{%- endif -%}"
                                 {% if user.id != current_user.id %}
                                     data-bs-toggle="tooltip"
@@ -40,8 +40,14 @@
                     </td>
                     <td class="text-center">
                         {% for crew in user.crews %}
-                            <span class="badge bg-success">{{ crew.name }}</span>
+                            <span class="badge bg-success position-relative me-2">
+                                {{crew.name}}
+                                <a href="{{url_for('admin_bp.unlink_crew', id=crew.id, users=user.id)}}" class="btn position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger" data-bs-toggle="tooltip" data-bs-title="Unlink">
+                                    -
+                                </a>
+                            </span>
                         {% endfor %}
+                        <span role="button" class="badge bg-success" onclick="linkUserWithCrew('{{user.id}}')">+</span>
                     </td>
                 </tr>
             {% endfor %}
@@ -57,6 +63,20 @@
                     <span>{{crew.name}}</span>
                     <span>{{crew.id}}</span>
                 </h5>
+                <h6 class="card-subtitle mb-2">
+                    {%- if crew.owners -%}
+                        Owned by {% for owner in crew.owners -%}
+                            <a href="{{url_for('admin_bp.user', id=owner.id)}}">{{owner.login}}</a>
+                            {%- if loop.index != crew.owners|length %},&nbsp;{% endif -%}
+                        {%- endfor -%}
+                    {% else %}
+                        <span class="badge bg-warning"
+                              data-bs-toggle="tooltip"
+                              data-bs-title="Has no linked users">
+                            Orphan
+                        </span>
+                    {% endif %}
+                </h6>
                 <button class="card-subtitle card-link btn btn-sm btn-outline-dark" onclick="navigator.clipboard.writeText('{{ crew.token }}')">Copy Access Token</button>
                 <button class="card-subtitle card-link btn btn-sm btn-outline-danger" onclick="deleteCrew({{crew.id}}, '{{crew.name}}')">Delete</button>
             </div>

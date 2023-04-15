@@ -20,3 +20,12 @@ class Ship(SqlAlchemyBase):
 
     def __repr__(self):
         return f"Ship(id={self.id!r}, shame={self.shame!r}, crew={self.crew!r})"
+
+    def health(self):
+        return sum(map(lambda d: d.health, self.details))
+
+    def power_generation(self):
+        return sum(map(lambda d: d.power_generation, self.details))
+
+    def power_consumption(self):
+        return sum(map(lambda d: d.power_consumption, self.details))

@@ -11,7 +11,7 @@
         <a href="#" class="btn badge bg-primary" style="cursor: pointer;" onclick="changeCurrency({{user.id}}, '{{user.login}}', {{user.currency}})" data-bs-toggle="tooltip" data-bs-title="Click to change">{{ user.currency }} Qk</a>
         {% if user.is_admin %}
             {% if current_user.id != user.id %}
-                <a href="{{ url_for('admin_bp.toggle_admin_state', user_id=user.id) }}" class="btn badge bg-danger" data-bs-toggle="tooltip" data-bs-title="Click to remove admin rights">admin</a>
+                <a href="{{ url_for('admin_bp.toggle_admin_state', id=user.id) }}" class="btn badge bg-danger" data-bs-toggle="tooltip" data-bs-title="Click to remove admin rights">admin</a>
             {% else %}
                 <span class="badge bg-danger">admin</a>
             {% endif %}
@@ -19,7 +19,7 @@
     </h3>
     <div class="d-flex">
         {% if current_user.id != user.id %}
-        <a href="{{ url_for('admin_bp.toggle_admin_state', user_id=user.id) }}" class="btn btn-sm btn-outline-danger me-4">
+        <a href="{{ url_for('admin_bp.toggle_admin_state', id=user.id) }}" class="btn btn-sm btn-outline-danger me-4">
             {% if user.is_admin %}
                 Remove admin rights
             {% else %}

@@ -1,6 +1,6 @@
 import sqlalchemy as sa
 
-from typing import List
+from typing import Set
 from flask_login import UserMixin
 from .db_session import SqlAlchemyBase
 from werkzeug.security import check_password_hash, generate_password_hash
@@ -14,10 +14,10 @@ class User(UserMixin, SqlAlchemyBase):
     password = sa.Column(sa.String, unique=False)
     currency = sa.Column(sa.Integer, default=0)
     is_admin = sa.Column(sa.Boolean)
-    crews: sa.orm.Mapped[List["Crew"]] = sa.orm.relationship(secondary="crew_groups")
+    crews: sa.orm.Mapped[Set["Crew"]] = sa.orm.relationship(secondary="crew_groups")
 
     def __repr__(self):
-        return f"User(id={self.id}, login={self.login}, password={self.password}, admin={self.admin})"
+        return f"User(id={self.id}, login={self.login}, password={self.password}, admin={self.is_admin})"
 
     def set_password(self, password):
         self.password = generate_password_hash(password, method="sha256")

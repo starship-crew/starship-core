@@ -1,6 +1,6 @@
 import sqlalchemy as sa
 
-from typing import List
+from typing import Set
 from .db_session import SqlAlchemyBase
 
 
@@ -14,7 +14,7 @@ class Crew(SqlAlchemyBase):
 
     ship = sa.orm.relationship("Ship", uselist=False, back_populates="crew")
 
-    owners: sa.orm.Mapped[List["User"]] = sa.orm.relationship(
+    owners: sa.orm.Mapped[Set["User"]] = sa.orm.relationship(
         secondary="crew_groups",
         back_populates="crews",
     )
