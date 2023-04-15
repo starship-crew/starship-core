@@ -47,7 +47,7 @@
                                 <span class="badge bg-danger">{{detail.health}} HP</span>
                             </h6>
                             {% if detail.description.get(lang) %}
-                                <p class="card-text">{{detail.description.get(lang)}}</p>
+                                <p class="card-text mt-3">{{detail.description.get(lang)}}</p>
                             {% endif %}
                             {% if detail.power_generation or detail.power_consumption or detail.accel_factor or detail.damage_absorption or detail.damage %}
                                 <div class="card">
@@ -89,7 +89,7 @@
                                     </ul>
                                 </div>
                             {% endif %}
-                            <div class="text-center mt-3">
+                            <div class="text-center">
                                 <a href="{{url_for('admin_bp.edit_detail', id=detail.id)}}" class="card-link">Edit</a>
                                 <a href="#" onclick="deleteDetail({{detail.id}}, '{{detail.name.get(lang)}}')" class="card-link">Delete</a>
                             </div>
