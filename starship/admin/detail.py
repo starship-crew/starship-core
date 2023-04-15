@@ -227,7 +227,7 @@ def edit_detail(id):
             if form.description.data
             else Sentence()
         )
-        detail.kind_id = form.kind.data
+        detail.kind_id = form.kind.raw_data[0]
         detail.cost = form.cost.data
         detail.health = form.health.data
         apply_yaml_chars_on_detail(detail, form.chars.data)
