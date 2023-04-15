@@ -48,49 +48,21 @@
         </tbody>
     </table>
 
-    <div class="container-fluid d-flex p-0">
-        <div class="container-fluid p-0 w-50">
-            <h2>Crews</h2>
-            <div class="list-group">
-                {% for crew in crews %}
-                    <div class="list-group-item list-group-item-action">
-                        <div class="d-flex w-100 justify-content-between">
-                            <div class="d-flex flex-wrap align-content-center">
-                                <h5 class="mb-1 text-secondary-emphasis" style="cursor: pointer;" onclick="navigator.clipboard.writeText('{{ crew.id }}')" data-bs-toggle="tooltip" data-bs-title="Click to copy">{{ crew.id }}</h5>
-                                <span>/</span>
-                                <h5 class="mb-1 text-secondary-emphasis" style="cursor: pointer;" onclick="navigator.clipboard.writeText('{{ crew.name }}')" data-bs-toggle="tooltip" data-bs-title="Click to copy">{{ crew.name }}</h5>
-                            </div>
-                            <div class="d-flex flex-column">
-                                <button class="btn" onclick="navigator.clipboard.writeText('{{ crew.token }}')">Copy Token</button>
-                                <button class="btn"><a href="#">Watch Ship</a></button>
-                            </div>
-                        </div>
-                    </div>
-                {% endfor %}
+    <h2>Crews and Ships</h2>
+    <div class="d-flex flex-wrap">
+        {% for crew in crews %}
+        <div class="card me-2 mb-2" style="width: 18rem;">
+            <div class="card-body">
+                <h5 class="card-title d-flex justify-content-between">
+                    <span>{{crew.name}}</span>
+                    <span>{{crew.id}}</span>
+                </h5>
+                <button class="card-subtitle card-link btn btn-sm btn-outline-dark" onclick="navigator.clipboard.writeText('{{ crew.token }}')">Copy Access Token</button>
+                <button class="card-subtitle card-link btn btn-sm btn-outline-danger" onclick="deleteCrew({{crew.id}}, '{{crew.name}}')">Delete</button>
             </div>
         </div>
-        <div class="container-fluid p-0" style="margin-left: 1rem;">
-            <h2>Ships</h2>
-            <div class="list-group">
-                {% for ship in ships %}
-                    <div class="list-group-item list-group-item-action">
-                        <div class="d-flex w-100 justify-content-between">
-                            <div class="d-flex flex-wrap align-content-center">
-                                <h5 class="mb-1" onclick="navigator.clipboard.writeText('1')">{{ship.crew.id}}</h5>
-                                <span> / </span>
-                                <h5 class="mb-1" onclick="navigator.clipboard.writeText('Crew1')">{{ship.crew.name}}</h5>
-                            </div>
-                            <div class="d-flex flex-column">
-                                <a href="#" class="btn">Watch Ship</small>
-                            </div>
-                        </div>
-                    </div>
-                {% endfor %}
-            </div>
-        </div>
+        {% endfor %}
     </div>
-
-
 </div>
 
 {% endblock %}

@@ -58,10 +58,10 @@ function deleteDetailType(id, name) {
 }
 
 function deleteDetail(id, name) {
-    let sure = confirm(`Confirm deletion of detail "${name}" with id ${id}`);
+    let sure = confirm(`Confirm deletion of detail ${id}/(${name})`);
     if (sure) {
-        const dt_url = `${index}/detail/${id}`;
-        const url = `${dt_url}/delete`;
+        const detail_url = `${index}/detail/${id}`;
+        const url = `${detail_url}/delete`;
         window.location = url;
     }
 }
@@ -70,6 +70,15 @@ function createCrew() {
     let name = prompt("Type a name of the crew to create");
     if (name) {
         const url = `${index}/create_crew/${name}`;
+        window.location = url;
+    }
+}
+
+function deleteCrew(id, name) {
+    let sure = prompt(`Confirm deletion of crew ${id}/${name} by typing CONFIRM word`);
+    if (sure == "CONFIRM") {
+        const crew_url = `${index}/crew/${id}`;
+        const url = `${crew_url}/delete`;
         window.location = url;
     }
 }
