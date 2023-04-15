@@ -19,8 +19,17 @@
                         {% endif%}>
                         {{detail_type.name.get(lang)}}</h5>
                     <p class="card-text">{{detail_type.description.get(lang)}}</p>
-                    <div class="text-center">
+                    <div class="d-flex justify-content-evenly align-items-center">
                         <a href="{{url_for('admin_bp.edit_detail_type', id=detail_type.id)}}" class="card-link">Edit</a>
+                        <div class="btn-group">
+                            {% if (detail_type.order - 1) > 0 %}
+                                <a href="{{url_for('admin_bp.change_detail_type_order', id=detail_type.id, direction='up')}}" class="btn btn-sm btn-outline-success">←</a>
+                            {% endif %}
+                            <a href="#" class="btn btn-sm btn-outline-success">Order ({{detail_type.order}})</a>
+                            {% if (detail_type.order + 1) <= detail_types|length %}
+                                <a href="{{url_for('admin_bp.change_detail_type_order', id=detail_type.id, direction='down')}}" class="btn btn-sm btn-outline-success">→</a>
+                            {% endif %}
+                        </div>
                         <a href="#" onclick="deleteDetailType({{detail_type.id}}, '{{detail_type.name.get(lang)}}')" class="card-link">Delete</a>
                     </div>
                 </div>

@@ -1,3 +1,4 @@
+from collections import OrderedDict
 import yaml
 import sqlalchemy as sa
 
@@ -15,7 +16,7 @@ try:
 except ImportError:
     from yaml import BaseLoader as YamlLoader
 
-from flask import flash, redirect, render_template, url_for
+from flask import flash, redirect, render_template, request, url_for
 
 
 @admin_bp.route("/details")
@@ -23,8 +24,8 @@ from flask import flash, redirect, render_template, url_for
 def detail_management():
     db_sess = db_session.create_session()
 
-    detail_types = db_sess.query(DetailType).all()
-    details = {}
+    detail_types = db_sess.query(DetailType).order_by(DetailType.order).all()
+    details = OrderedDict()
     for detail_type in detail_types:
         details[detail_type] = (
             db_sess.query(Detail)
@@ -38,7 +39,7 @@ def detail_management():
         title="Detail Management",
         details_page=True,
         lang=get_lang(),
-        detail_types=db_sess.query(DetailType).all(),
+        detail_types=detail_types,
         details=details,
     )
 
@@ -85,6 +86,41 @@ def detail_type(id):
         dt=dt,
         details_page=True,
     )
+
+
+@admin_bp.route("/detail_type/<int:id>/change_order")
+def change_detail_type_order(id):
+    db_sess = db_session.create_session()
+
+    dt = db_sess.query(DetailType).get(id)
+    if not dt:
+        flash(f"Detail type with id {id} not found")
+        return redirect(redirect_url())
+
+    dir = request.args.get("direction", None)
+
+    if dir not in {"up", "down"}:
+        flash("Direction to change order in was not specified")
+        return redirect(redirect_url())
+
+    if dir == "up":
+        if not (
+            dt_prev := db_sess.query(DetailType).filter_by(order=dt.order - 1).first()
+        ):
+            return redirect(redirect_url())
+        dt.order -= 1
+        dt_prev.order += 1
+    elif dir == "down":
+        if not (
+            dt_next := db_sess.query(DetailType).filter_by(order=dt.order + 1).first()
+        ):
+            return redirect(redirect_url())
+        dt.order += 1
+        dt_next.order -= 1
+
+    db_sess.commit()
+
+    return redirect(redirect_url())
 
 
 @admin_bp.route("/detail_type/<int:id>/edit", methods=["GET", "POST"])
@@ -251,7 +287,7 @@ def delete_detail(id):
 
 @admin_bp.route("/detail_copy/<int:id>/repair")
 @admin_required
-def repair_detail_copy(id, value):
+def repair_detail_copy(id):
     db_sess = db_session.create_session()
     dc = db_sess.query(DetailCopy).get(id)
 

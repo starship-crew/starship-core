@@ -29,11 +29,15 @@ def create_crew(name):
 
     ship = Ship()
 
-    starter_details = db_sess.query(Detail).filter_by(cost=0).all()
+    starter_details = (
+        db_sess.query(Detail).filter_by(cost=0).order_by(Detail.kind.order)
+    )
     for detail in starter_details:
         detail_copy = DetailCopy()
         detail_copy.ship = ship
         detail_copy.kind = detail
+        detail_copy.health = detail.health
+        ship.details.append(detail_copy)
 
     crew = Crew()
     crew.token = token

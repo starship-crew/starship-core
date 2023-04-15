@@ -7,6 +7,7 @@ class DetailType(SqlAlchemyBase):
     __tablename__ = "detail_types"
 
     id = sa.Column(sa.Integer, primary_key=True, autoincrement=True)
+    order = sa.Column(sa.Integer, autoincrement=True)
 
     name_id = sa.Column(sa.Integer, sa.ForeignKey("sentences.id"))
     name = sa.orm.relationship("Sentence", foreign_keys=[name_id])
