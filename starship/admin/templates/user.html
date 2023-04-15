@@ -27,8 +27,6 @@
         </a>
         {% endif %}
 
-        <a href="#" class="btn btn-sm btn-outline-primary me-4" onclick="changeCurrency({{user.id}}, '{{user.login}}', {{user.currency}})">Change currency value</a>
-
         {% if not user.is_primary_admin() %}
             <a href="#" class="btn btn-sm btn-outline-secondary me-4" onclick="changeLogin({{user.id}}, '{{user.login}}', '{{user.login}}')">Change login</a>
         {% endif %}
