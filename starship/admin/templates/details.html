@@ -5,14 +5,7 @@
 <div class="container-fluid w-75">
     <div class="d-flex justify-content-between">
         <h2>Detail Types</h2>
-        <ul class="nav nav-pills position-fixed" style="right: 5rem;">
-            <li class="nav-item">
-                <a class="nav-link {%- if lang == 'en' %} active{%- endif -%}" href="{{url_for('admin_bp.detail_management', lang='en')}}">EN</a>
-            </li>
-            <li class="nav-item">
-                <a class="nav-link {%- if lang == 'ru' %} active{%- endif -%}" href="{{url_for('admin_bp.detail_management', lang='ru')}}">RU</a>
-            </li>
-        </ul>
+        {% include "lang_toggler.html" %}
     </div>
     <div class="d-flex flex-wrap">
         {% for detail_type in detail_types %}
@@ -42,7 +35,7 @@
                 {% for detail in details %}
                     <div class="card me-2 mb-2" style="width: 18rem;">
                         <div class="card-body d-flex flex-column justify-content-between">
-                            <div class="">
+                            <div>
                                 <h5 class="card-title text-center">{{detail.name.get(lang)}}</h6>
                                 <h6 class="card-subtitle text-center">
                                     {% if detail.cost == 0 %}
@@ -56,54 +49,7 @@
                                     {% endif %}
                                     <span class="badge bg-danger">{{detail.health}} HP</span>
                                 </h6>
-                                {% if detail.power_generation or detail.power_consumption or detail.accel_factor or detail.damage_absorption or detail.damage %}
-                                    <div class="card mt-2">
-                                        <ul class="list-group list-group-flush">
-                                            {% if detail.power_generation %}
-                                            <li class="list-group-item d-flex justify-content-between">
-                                                <span>Power generation</span>
-                                                <span class="badge bg-info">{{detail.power_generation}}</span>
-                                            </li>
-                                            {% endif %}
-
-                                            {% if detail.power_consumption %}
-                                            <li class="list-group-item d-flex justify-content-between">
-                                                <span>Power consumption</span>
-                                                <span class="badge bg-info">{{detail.power_consumption}}</span>
-                                            </li>
-                                            {% endif %}
-
-                                            {% if detail.accel_factor %}
-                                            <li class="list-group-item d-flex justify-content-between">
-                                                <span>Accel factor</span>
-                                                {% if detail.accel_factor == -1 %}
-                                                    <span class="badge bg-warning"
-                                                        data-bs-toggle="tooltip"
-                                                        data-bs-title="Infinity (i. e. -1)">
-                                                        &infin;
-                                                    </span>
-                                                {% else %}
-                                                    <span class="badge bg-info">{{detail.accel_factor}}</span>
-                                                {% endif %}
-                                            </li>
-                                            {% endif %}
-
-                                            {% if detail.damage_absorption %}
-                                            <li class="list-group-item d-flex justify-content-between">
-                                                <span>Damage absorption</span>
-                                                <span class="badge bg-info">{{detail.damage_absorption}}</span>
-                                            </li>
-                                            {% endif %}
-
-                                            {% if detail.damage %}
-                                            <li class="list-group-item d-flex justify-content-between">
-                                                <span>Damage</span>
-                                                <span class="badge bg-info">{{detail.damage}}</span>
-                                            </li>
-                                            {% endif %}
-                                        </ul>
-                                    </div>
-                                {% endif %}
+                                {% include "detail_chars.html" %}
                                 {% if detail.description.get(lang) %}
                                     <p class="card-text my-2">{{detail.description.get(lang)}}</p>
                                 {% endif %}

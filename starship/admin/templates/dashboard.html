@@ -59,7 +59,7 @@
                     <span><span data-bs-toggle="tooltip" role="button" data-bs-title="Click to copy"  onclick="navigator.clipboard.writeText('{{ crew.id }}')">{{crew.id}}</span> / {{crew.name}}</span>
                     <a href="#" role="button" class="btn btn-sm badge bg-primary" onclick="changeCurrency({{crew.id}}, '{{crew.name}}')" data-bs-toggle="tooltip" data-bs-title="Click to change">{{ crew.currency }} Qk</a>
                 </h5>
-                <h6 class="card-subtitle mb-4">
+                <h6 class="text-center card-subtitle mb-4">
                     {%- if crew.owners -%}
                         Owned by {% for owner in crew.owners -%}
                             <a href="{{url_for('admin_bp.user', id=owner.id)}}">{{owner.login}}</a>
@@ -73,8 +73,11 @@
                         </span>
                     {% endif %}
                 </h6>
-                <button class="card-subtitle card-link btn btn-sm btn-outline-dark" onclick="navigator.clipboard.writeText('{{ crew.token }}')">Copy Access Token</button>
-                <button class="card-subtitle card-link btn btn-sm btn-outline-danger" onclick="deleteCrew({{crew.id}}, '{{crew.name}}')">Delete</button>
+                <div class="d-flex justify-content-evenly">
+                    <button class="card-link btn btn-sm btn-outline-dark" onclick="navigator.clipboard.writeText('{{ crew.token }}')">Token</button>
+                    <a href="{{url_for('admin_bp.ship', id=crew.ship.id)}}" class="card-link btn btn-sm btn-outline-primary">Ship</a>
+                    <button class="card-link btn btn-sm btn-outline-danger" onclick="deleteCrew({{crew.id}}, '{{crew.name}}')">Delete</button>
+                </div>
             </div>
         </div>
         {% endfor %}

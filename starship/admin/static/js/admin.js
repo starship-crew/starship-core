@@ -93,3 +93,12 @@ function deleteCrew(id, name) {
         window.location = url;
     }
 }
+
+function deleteDetailCopy(id, name) {
+    let sure = prompt(`Confirm deletion of detail copy ${id}/${name} by typing CONFIRM word`);
+    if (sure == "CONFIRM") {
+        const dc_url = `${index}/detail_copy/${id}`;
+        const url = `${crew_url}/delete`;
+        window.location = url;
+    }
+}

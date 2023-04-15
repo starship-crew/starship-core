@@ -1,0 +1,10 @@
+{% if lang %}
+<ul class="nav nav-pills position-fixed" style="right: 5rem;">
+    <li class="nav-item">
+        <a class="nav-link {%- if lang == 'en' %} active{%- endif -%}" href="{{url_for(request.endpoint, lang='en', **request.view_args)}}">EN</a>
+    </li>
+    <li class="nav-item">
+        <a class="nav-link {%- if lang == 'ru' %} active{%- endif -%}" href="{{url_for(request.endpoint, lang='ru', **request.view_args)}}">RU</a>
+    </li>
+</ul>
+{% endif %}

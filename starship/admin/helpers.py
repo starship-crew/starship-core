@@ -1,9 +1,36 @@
+import yaml
+
 from flask import request
 from functools import wraps
 from urllib.parse import urljoin, urlparse
 
 from flask import abort, url_for
+from wtforms.validators import ValidationError
 from flask_login import login_required, current_user
+
+from starship.data.sentence import Sentence
+
+# try using fast LibYAML C library for parsing yaml and falling back to pure
+# Python implementation
+try:
+    from yaml import CBaseLoader as YamlLoader
+except ImportError:
+    from yaml import BaseLoader as YamlLoader
+
+
+class YamlValidator:
+    def __init__(self, message=None):
+        if not message:
+            message = "Field doesn't contain valid YAML formatted text."
+        self.message = message
+
+    def __call__(self, form, field):
+        try:
+            if len(field.data) != 0 and ":" not in field.data:
+                raise yaml.YAMLError
+            yaml.load(field.data, YamlLoader)
+        except yaml.YAMLError:
+            raise ValidationError(self.message)
 
 
 def is_safe_url(target):
@@ -31,3 +58,23 @@ def admin_required(func):
         return func(*args, **kwargs)
 
     return new_func
+
+
+# Default language
+LANG = "ru"
+
+
+def get_lang():
+    return request.args.get("lang", LANG)
+
+
+def yaml_to_sentence(text, sentence=None):
+    if not sentence:
+        sentence = Sentence()
+
+    pyobj = yaml.load(text, YamlLoader).items()
+
+    for lang, value in pyobj:
+        sentence.__setattr__(lang, value)
+
+    return sentence

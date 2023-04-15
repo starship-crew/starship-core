@@ -1,0 +1,48 @@
+{% if detail.power_generation or detail.power_consumption or detail.accel_factor or detail.damage_absorption or detail.damage %}
+<div class="card mt-2">
+    <ul class="list-group list-group-flush">
+        {% if detail.power_generation %}
+        <li class="list-group-item d-flex justify-content-between">
+            <span>Power generation</span>
+            <span class="badge bg-info">{{detail.power_generation}}</span>
+        </li>
+        {% endif %}
+
+        {% if detail.power_consumption %}
+        <li class="list-group-item d-flex justify-content-between">
+            <span>Power consumption</span>
+            <span class="badge bg-info">{{detail.power_consumption}}</span>
+        </li>
+        {% endif %}
+
+        {% if detail.accel_factor %}
+        <li class="list-group-item d-flex justify-content-between">
+            <span>Accel factor</span>
+            {% if detail.accel_factor == -1 %}
+            <span class="badge bg-warning"
+                  data-bs-toggle="tooltip"
+                  data-bs-title="Infinity (i. e. -1)">
+                &infin;
+            </span>
+            {% else %}
+            <span class="badge bg-info">{{detail.accel_factor}}</span>
+            {% endif %}
+        </li>
+        {% endif %}
+
+        {% if detail.damage_absorption %}
+        <li class="list-group-item d-flex justify-content-between">
+            <span>Damage absorption</span>
+            <span class="badge bg-info">{{detail.damage_absorption}}</span>
+        </li>
+        {% endif %}
+
+        {% if detail.damage %}
+        <li class="list-group-item d-flex justify-content-between">
+            <span>Damage</span>
+            <span class="badge bg-info">{{detail.damage}}</span>
+        </li>
+        {% endif %}
+    </ul>
+</div>
+{% endif %}

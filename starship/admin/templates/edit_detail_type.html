@@ -10,7 +10,8 @@
     <p>
         {{ form.name.label }}<br>
         <textarea class="form-control" name="{{form.name.name}}" id="{{form.name.id}}"
-                  placeholder="en: Detail type name example\nru: Пример наименования типа детали">
+                  placeholder="en: Detail type name example
+ru: Пример наименования типа детали">
             {{- dt.name.to_yaml_string() -}}
         </textarea><br>
         {% for error in form.name.errors %}
@@ -23,7 +24,8 @@
     <p>
         {{ form.description.label }}<br>
         <textarea class="form-control" name="{{form.description.name}}" id="{{form.description.id}}"
-                  placeholder="en: Detail type description example\nru: Пример описания типа детали">
+                  placeholder="en: Detail type description example
+ru: Пример описания типа детали">
             {{- dt.description.to_yaml_string() -}}
         </textarea><br>
         {% for error in form.description.errors %}

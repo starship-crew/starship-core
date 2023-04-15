@@ -14,6 +14,7 @@ class DetailCopy(SqlAlchemyBase):
     kind_id = sa.Column(sa.Integer, sa.ForeignKey("details.id"))
     kind = sa.orm.relationship("Detail", foreign_keys=[kind_id])
 
+    health = sa.Column(sa.Integer, nullable=False)
     level = sa.Column(sa.Integer, default=1)
 
     def __repr__(self):

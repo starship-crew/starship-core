@@ -2,8 +2,9 @@ import yaml
 import sqlalchemy as sa
 
 from starship.data import db_session
+from starship.data.detail_copy import DetailCopy
 from .blueprint import admin_bp
-from .helpers import admin_required, redirect_url
+from .helpers import admin_required, redirect_url, get_lang, yaml_to_sentence
 from starship.data.sentence import Sentence
 from starship.data.detail_type import DetailType
 from starship.data.detail import Detail
@@ -14,14 +15,7 @@ try:
 except ImportError:
     from yaml import BaseLoader as YamlLoader
 
-from flask import flash, redirect, render_template, request, url_for
-
-# Default language
-LANG = "ru"
-
-
-def get_lang():
-    return request.args.get("lang", LANG)
+from flask import flash, redirect, render_template, url_for
 
 
 @admin_bp.route("/details")
@@ -47,18 +41,6 @@ def detail_management():
         detail_types=db_sess.query(DetailType).all(),
         details=details,
     )
-
-
-def yaml_to_sentence(text, sentence=None):
-    if not sentence:
-        sentence = Sentence()
-
-    pyobj = yaml.load(text, YamlLoader).items()
-
-    for lang, value in pyobj:
-        sentence.__setattr__(lang, value)
-
-    return sentence
 
 
 @admin_bp.route("/create_detail_type", methods=["GET", "POST"])
@@ -149,6 +131,8 @@ def delete_detail_type(id):
 
     try:
         db_sess.delete(dt)
+        db_sess.delete(dt.name)
+        db_sess.delete(dt.description)
         db_sess.commit()
     except sa.exc.SQLAlchemyError as e:
         flash(f"Error while deleting detail_type with id {id}: {e}")
@@ -256,8 +240,67 @@ def delete_detail(id):
 
     try:
         db_sess.delete(detail)
+        db_sess.delete(detail.name)
+        db_sess.delete(detail.description)
         db_sess.commit()
     except sa.exc.SQLAlchemyError as e:
         flash(f"Error while deleting detail_type with id {id}: {e}")
+
+    return redirect(url_for("admin_bp.detail_management"))
+
+
+@admin_bp.route("/detail_copy/<int:id>/repair")
+@admin_required
+def repair_detail_copy(id, value):
+    db_sess = db_session.create_session()
+    dc = db_sess.query(DetailCopy).get(id)
+
+    if not dc:
+        flash(f"Detail Copy with id {id} not found")
+        return redirect(redirect_url())
+
+    try:
+        dc.health = dc.kind.health
+        db_sess.commit()
+    except sa.exc.DataError:
+        flash(f'Failed to change currency to "{value}" cause of data processing issues')
+
+    return redirect(redirect_url())
+
+
+@admin_bp.route("/detail_copy/<int:id>/set_level/<value>")
+@admin_required
+def change_detail_copy_level(id, value):
+    db_sess = db_session.create_session()
+    dc = db_sess.query(DetailCopy).get(id)
+
+    if not dc:
+        flash(f"Detail Copy with id {id} not found")
+        return redirect(redirect_url())
+
+    try:
+        dc.level = value
+        db_sess.commit()
+    except sa.exc.DataError:
+        flash(f'Failed to change currency to "{value}" cause of data processing issues')
+
+    return redirect(redirect_url())
+
+
+@admin_bp.route("/detail_copy/<int:id>/delete")
+@admin_required
+def delete_detail_copy(id):
+    db_sess = db_session.create_session()
+    dc = db_sess.query(DetailCopy).get(id)
+
+    if not dc:
+        flash(f"Detail Copy with id {id} not found")
+        return redirect(redirect_url())
+
+    try:
+        db_sess.delete(dc)
+        db_sess.commit()
+    except sa.exc.SQLAlchemyError as e:
+        flash(f"Error while deleting detail_copy with id {id}: {e}")
 
     return redirect(url_for("admin_bp.detail_management"))
