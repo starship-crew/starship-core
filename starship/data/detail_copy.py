@@ -47,6 +47,15 @@ class DetailCopy(SqlAlchemyBase):
     def put_on(self):
         if self.garage:
             self.ship = self.garage.crew.ship
+
+            # If there's a detail with the same type as this, it must be put off
+            # from the ship before putting on
+            if dc := next(
+                filter(lambda dc: dc.kind.kind == self.kind.kind, self.ship.details)
+            ):
+                self.ship.remove(dc)
+                self.garage.details.append(dc)
+
             self.ship.details.append(self)
             self.garage.details.remove(self)
             self.garage = None
