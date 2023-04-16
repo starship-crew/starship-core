@@ -3,6 +3,7 @@ import secrets
 
 from starship.data import db_session
 from starship.data.crew import Crew
+from starship.data.garage import Garage
 from starship.data.ship import Ship
 from starship.data.detail import Detail
 from starship.data.detail_copy import DetailCopy
@@ -37,10 +38,13 @@ def create_crew(name):
         detail_copy.health = detail.health
         ship.details.append(detail_copy)
 
+    garage = Garage()
+
     crew = Crew()
     crew.token = token
     crew.name = name
     crew.ship = ship
+    crew.garage = garage
 
     linked_users = set()
     if user_ids := request.args.get("linked_users", None):

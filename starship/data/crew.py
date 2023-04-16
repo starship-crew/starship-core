@@ -14,6 +14,7 @@ class Crew(SqlAlchemyBase):
     currency = sa.Column(sa.Integer, default=0)
 
     ship = sa.orm.relationship("Ship", uselist=False, back_populates="crew")
+    garage = sa.orm.relationship("Garage", uselist=False, back_populates="crew")
 
     owners: sa.orm.Mapped[Set["User"]] = sa.orm.relationship(
         secondary="crew_groups",
