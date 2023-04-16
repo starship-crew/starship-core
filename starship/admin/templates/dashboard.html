@@ -76,6 +76,7 @@
                 <div class="d-flex justify-content-evenly">
                     <button class="card-link btn btn-sm btn-outline-dark" onclick="navigator.clipboard.writeText('{{ crew.token }}')" data-bs-toggle="tooltip" data-bs-title="Click to copy access token">Token</button>
                     <a href="{{url_for('admin_bp.ship', id=crew.ship.id)}}" class="card-link btn btn-sm btn-outline-primary">Ship</a>
+                    <a href="{{url_for('admin_bp.garage', id=crew.garage.id)}}" class="card-link btn btn-sm btn-outline-secondary">Garage</a>
                     <button class="card-link btn btn-sm btn-outline-danger" onclick="deleteCrew({{crew.id}}, '{{crew.name}}')">Delete</button>
                 </div>
             </div>

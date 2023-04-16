@@ -94,11 +94,14 @@ function deleteCrew(id, name) {
     }
 }
 
-function deleteDetailCopy(id, name, ship_id) {
+function deleteDetailCopy(id, name, next = null) {
     let sure = prompt(`Confirm deletion of detail copy ${id}/${name} by typing CONFIRM word`);
     if (sure == "CONFIRM") {
         const dc_url = `${index}/detail_copy/${id}`;
-        const url = `${dc_url}/delete?next=${index}/ship/${ship_id}`;
+        let url = `${dc_url}/delete`;
+        if (next != null) {
+            url += `?next=${next}`;
+        }
         window.location = url;
     }
 }
@@ -108,6 +111,15 @@ function deleteShip(id) {
     if (sure == "CONFIRM") {
         const ship_url = `${index}/ship/${id}`;
         const url = `${ship_url}/delete`;
+        window.location = url;
+    }
+}
+
+function deleteGarage(id) {
+    let sure = prompt(`Confirm deletion of garage with id ${id} by typing CONFIRM word`);
+    if (sure == "CONFIRM") {
+        const garage_url = `${index}/garage/${id}`;
+        const url = `${garage_url}/delete`;
         window.location = url;
     }
 }

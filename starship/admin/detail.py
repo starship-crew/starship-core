@@ -323,6 +323,38 @@ def change_detail_copy_level(id, value):
     return redirect(redirect_url())
 
 
+@admin_bp.route("/detail_copy/<int:id>/put_on")
+@admin_required
+def put_on_detail_copy(id):
+    db_sess = db_session.create_session()
+    dc = db_sess.query(DetailCopy).get(id)
+
+    if not dc:
+        flash(f"Detail Copy with id {id} not found")
+        return redirect(redirect_url())
+
+    dc.put_on()
+    db_sess.commit()
+
+    return redirect(redirect_url())
+
+
+@admin_bp.route("/detail_copy/<int:id>/put_off")
+@admin_required
+def put_off_detail_copy(id):
+    db_sess = db_session.create_session()
+    dc = db_sess.query(DetailCopy).get(id)
+
+    if not dc:
+        flash(f"Detail Copy with id {id} not found")
+        return redirect(redirect_url())
+
+    dc.put_off()
+    db_sess.commit()
+
+    return redirect(redirect_url())
+
+
 @admin_bp.route("/detail_copy/<int:id>/delete")
 @admin_required
 def delete_detail_copy(id):

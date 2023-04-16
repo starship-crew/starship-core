@@ -23,14 +23,39 @@ class DetailCopy(SqlAlchemyBase):
     def __repr__(self):
         return f"DetailCopy(id={self.id!r}, ship={self.ship!r}, kind={self.kind!r}, level={self.level!r})"
 
+    def name(self):
+        return self.kind.name
+
+    def description(self):
+        return self.kind.description
+
+    def cost(self):
+        return self.kind.cost
+
+    def order(self):
+        return self.kind.kind.order
+
+    def required(self):
+        return self.kind.kind.required
+
+    def can_put_on(self):
+        return self.garage is not None
+
+    def can_put_off(self):
+        return self.ship is not None
+
     def put_on(self):
         if self.garage:
             self.ship = self.garage.crew.ship
+            self.ship.details.append(self)
+            self.garage.details.remove(self)
             self.garage = None
 
     def put_off(self):
         if self.ship:
             self.garage = self.ship.crew.garage
+            self.garage.details.append(self)
+            self.ship.details.remove(self)
             self.ship = None
 
     def crew(self):

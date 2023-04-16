@@ -7,3 +7,4 @@ from . import detail
 from . import user
 from . import ship
 from . import crew
+from . import garage

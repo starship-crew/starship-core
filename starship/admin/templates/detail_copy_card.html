@@ -1,0 +1,45 @@
+<div class="card me-2 mb-4" style="width: 22rem;">
+    <div class="card-body d-flex flex-column justify-content-between">
+        <div>
+            <h5 class="card-title text-center">{{dc.kind.name.get(lang)}}</h5>
+            <h6 class="card-subtitle text-center">
+                {% if dc.kind.cost == 0 %}
+                    <span class="badge bg-warning"
+                            data-bs-toggle="tooltip"
+                            data-bs-title="This detail will be put on every just created ship">
+                        starter
+                    </span>
+                {% else %}
+                    <span class="badge bg-primary">{{dc.kind.cost}} Qk</span>
+                {% endif %}
+                <span class="badge bg-danger">{{dc.health}}/{{dc.kind.health}} HP</span>
+            </h6>
+            {% set detail = dc.kind %}
+            {% include "detail_chars.html" %}
+        </div>
+        <div class="d-flex justify-content-between mt-2">
+            <a href="{{url_for('admin_bp.repair_detail_copy', id=dc.id)}}"
+                class="btn btn-sm btn-outline-primary"
+                data-bs-toggle="tooltip"
+                data-bs-title="Set health value to max">Repair</a>
+            <div class="btn-group">
+                <a href="#" class="btn btn-sm btn-outline-success">Level ({{dc.level}})</a>
+                <a href="{{url_for('admin_bp.change_detail_copy_level', id=dc.id, value=dc.level + 1)}}" class="btn btn-sm btn-outline-success">↑</a>
+                <a href="{{url_for('admin_bp.change_detail_copy_level', id=dc.id, value=dc.level - 1)}}" class="btn btn-sm btn-outline-success">↓</a>
+            </div>
+            {% if dc.can_put_on() %}
+                <a href="{{url_for('admin_bp.put_on_detail_copy', id=dc.id)}}"
+                    class="btn btn-sm btn-outline-primary"
+                    data-bs-toggle="tooltip"
+                    data-bs-title="Put detail on a ship and remove it from the garage">Put on</a>
+            {% endif %}
+            {% if dc.can_put_off() %}
+                <a href="{{url_for('admin_bp.put_off_detail_copy', id=dc.id)}}"
+                    class="btn btn-sm btn-outline-primary"
+                    data-bs-toggle="tooltip"
+                    data-bs-title="Put off detail from a ship and move it to the garage">Put off</a>
+            {% endif %}
+            <a href="#" onclick="deleteDetailCopy({{dc.id}}, '{{dc.kind.name.get(lang)}}'" class="btn btn-sm btn-outline-danger">Delete</a>
+        </div>
+    </div>
+</div>

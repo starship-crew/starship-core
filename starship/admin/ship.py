@@ -19,7 +19,7 @@ def ship(id):
         "ship.html",
         title=f"Ship {ship.id}",
         ship=ship,
-        details=sorted(ship.details, key=lambda d: d.kind.kind.order),
+        details=sorted(ship.details, key=lambda d: d.order()),
         lang=get_lang(),
     )
 
