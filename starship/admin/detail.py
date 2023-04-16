@@ -339,4 +339,4 @@ def delete_detail_copy(id):
     except sa.exc.SQLAlchemyError as e:
         flash(f"Error while deleting detail_copy with id {id}: {e}")
 
-    return redirect(url_for("admin_bp.detail_management"))
+    return redirect(redirect_url())

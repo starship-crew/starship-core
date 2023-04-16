@@ -1,3 +1,5 @@
+import sqlalchemy as sa
+
 from flask import abort, flash, redirect, render_template, url_for
 from starship.admin.forms.ship import ShipShameEditionForm
 from starship.data.ship import Ship
@@ -17,7 +19,7 @@ def ship(id):
         "ship.html",
         title=f"Ship {ship.id}",
         ship=ship,
-        details=sorted(ship, key=lambda d: d.order),
+        details=sorted(ship.details, key=lambda d: d.kind.kind.order),
         lang=get_lang(),
     )
 
@@ -45,3 +47,22 @@ def change_ship_shame(id):
         form=form,
         ship=ship,
     )
+
+
+@admin_bp.route("/ship/<int:id>/delete")
+@admin_required
+def delete_ship(id):
+    db_sess = db_session.create_session()
+    ship = db_sess.query(Ship).get(id)
+
+    if not ship:
+        flash(f"Ship with id {id} not found")
+        return redirect(redirect_url())
+
+    try:
+        db_sess.delete(ship)
+        db_sess.commit()
+    except sa.exc.SQLAlchemyError as e:
+        flash(f"Error while deleting ship with id {id}: {e}")
+
+    return redirect(redirect_url())

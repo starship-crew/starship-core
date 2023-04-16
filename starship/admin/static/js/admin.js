@@ -94,11 +94,20 @@ function deleteCrew(id, name) {
     }
 }
 
-function deleteDetailCopy(id, name) {
+function deleteDetailCopy(id, name, ship_id) {
     let sure = prompt(`Confirm deletion of detail copy ${id}/${name} by typing CONFIRM word`);
     if (sure == "CONFIRM") {
         const dc_url = `${index}/detail_copy/${id}`;
-        const url = `${crew_url}/delete`;
+        const url = `${dc_url}/delete?next=${index}/ship/${ship_id}`;
+        window.location = url;
+    }
+}
+
+function deleteShip(id) {
+    let sure = prompt(`Confirm deletion of ship with id ${id} by typing CONFIRM word`);
+    if (sure == "CONFIRM") {
+        const ship_url = `${index}/ship/${id}`;
+        const url = `${ship_url}/delete`;
         window.location = url;
     }
 }

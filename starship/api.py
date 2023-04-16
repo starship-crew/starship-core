@@ -29,9 +29,7 @@ def create_crew(name):
 
     ship = Ship()
 
-    starter_details = (
-        db_sess.query(Detail).filter_by(cost=0).order_by(Detail.kind.order)
-    )
+    starter_details = db_sess.query(Detail).filter_by(cost=0)
     for detail in starter_details:
         detail_copy = DetailCopy()
         detail_copy.ship = ship
