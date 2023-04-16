@@ -23,6 +23,10 @@ class DetailCopy(SqlAlchemyBase):
     def __repr__(self):
         return f"DetailCopy(id={self.id!r}, ship={self.ship!r}, kind={self.kind!r}, level={self.level!r})"
 
+    @classmethod
+    def new(cls, kind):
+        return DetailCopy(kind=kind, health=kind.health)
+
     def name(self):
         return self.kind.name
 
@@ -54,8 +58,7 @@ class DetailCopy(SqlAlchemyBase):
                 filter(lambda dc: dc.kind.kind == self.kind.kind, self.ship.details),
                 None,
             ):
-                self.ship.remove(dc)
-                self.garage.details.append(dc)
+                dc.put_off()
 
             self.ship.details.append(self)
             self.garage.details.remove(self)

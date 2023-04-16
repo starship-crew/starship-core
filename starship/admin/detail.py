@@ -4,6 +4,7 @@ import sqlalchemy as sa
 
 from starship.data import db_session
 from starship.data.detail_copy import DetailCopy
+from starship.data.garage import Garage
 from .blueprint import admin_bp
 from .helpers import admin_required, redirect_url, get_lang, yaml_to_sentence
 from starship.data.sentence import Sentence
@@ -262,6 +263,31 @@ def edit_detail(id):
         detail=detail,
         details_page=True,
     )
+
+
+@admin_bp.route("/detail/<int:id>/gift/<int:garage_id>")
+@admin_required
+def gift_detail(id, garage_id):
+    db_sess = db_session.create_session()
+    detail = db_sess.query(Detail).get(id)
+    garage = db_sess.query(Garage).get(garage_id)
+
+    if not detail:
+        flash(f"Detail with id {id} not found")
+        return redirect(redirect_url())
+
+    if not garage:
+        flash(f"Garage with id {garage_id} not found")
+        return redirect(redirect_url())
+
+    dc = DetailCopy.new(detail)
+    dc.garage = garage
+    dc.garage.details.append(dc)
+
+    db_sess.add(dc)
+    db_sess.commit()
+
+    return redirect(url_for("admin_bp.garage", id=garage_id))
 
 
 @admin_bp.route("/detail/<int:id>/delete")

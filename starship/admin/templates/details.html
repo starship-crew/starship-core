@@ -64,6 +64,11 @@
                                 {% endif %}
                             </div>
                             <div class="text-center">
+                                <a href="#" onclick="giftDetail({{detail.id}}, '{{detail.name.get(lang)}}')" class="card-link"
+                                    data-bs-toggle="tooltip"
+                                    data-bs-title="Create a copy of this detail and move it to the garage with the provided identifier">
+                                    Gift
+                                </a>
                                 <a href="{{url_for('admin_bp.edit_detail', id=detail.id)}}" class="card-link">Edit</a>
                                 <a href="#" onclick="deleteDetail({{detail.id}}, '{{detail.name.get(lang)}}')" class="card-link">Delete</a>
                             </div>

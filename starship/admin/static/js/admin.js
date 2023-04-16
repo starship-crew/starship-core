@@ -40,8 +40,8 @@ function gotoDetailType(id, lang) {
 }
 
 function deleteDetailType(id, name) {
-    let sure = confirm(`Confirm deletion of detail type "${name}" with id ${id}`);
-    if (sure) {
+    let sure = prompt(`Confirm deletion of detail type ${id}/${name} by typing CONFIRM word`);
+    if (sure == "CONFIRM") {
         const dt_url = `${index}/detail_type/${id}`;
         const url = `${dt_url}/delete`;
         window.location = url;
@@ -95,8 +95,8 @@ function deleteCrew(id, name) {
 }
 
 function deleteDetailCopy(id, name, next = null) {
-    let sure = prompt(`Confirm deletion of detail copy ${id}/${name} by typing CONFIRM word`);
-    if (sure == "CONFIRM") {
+    let sure = confirm(`Confirm deletion of detail copy ${id}/(${name})`);
+    if (sure) {
         const dc_url = `${index}/detail_copy/${id}`;
         let url = `${dc_url}/delete`;
         if (next != null) {
@@ -120,6 +120,15 @@ function deleteGarage(id) {
     if (sure == "CONFIRM") {
         const garage_url = `${index}/garage/${id}`;
         const url = `${garage_url}/delete`;
+        window.location = url;
+    }
+}
+
+function giftDetail(id, name) {
+    let garage_id = prompt(`Enter garage id to which a new copy of detail ${id}/(${name}) will be moved in`);
+    if (garage_id != null && parseInt(garage_id) != NaN) {
+        const detail_url = `${index}/detail/${id}`;
+        const url = `${detail_url}/gift/${garage_id}`;
         window.location = url;
     }
 }
