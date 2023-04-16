@@ -51,7 +51,8 @@ class DetailCopy(SqlAlchemyBase):
             # If there's a detail with the same type as this, it must be put off
             # from the ship before putting on
             if dc := next(
-                filter(lambda dc: dc.kind.kind == self.kind.kind, self.ship.details)
+                filter(lambda dc: dc.kind.kind == self.kind.kind, self.ship.details),
+                None,
             ):
                 self.ship.remove(dc)
                 self.garage.details.append(dc)
