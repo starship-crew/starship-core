@@ -4,8 +4,9 @@ from flask import abort, flash, redirect, render_template, url_for
 from starship.admin.forms.ship import ShipShameEditionForm
 from starship.data.ship import Ship
 from starship.data import db_session
+from starship.helpers import get_lang
 from .blueprint import admin_bp
-from .helpers import admin_required, get_lang, redirect_url, yaml_to_sentence
+from .helpers import admin_required, redirect_url, yaml_to_sentence
 
 
 @admin_bp.route("/ship/<int:id>")

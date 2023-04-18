@@ -1,5 +1,7 @@
 import sqlalchemy as sa
 
+from starship.helpers import get_lang
+
 from .db_session import SqlAlchemyBase
 
 
@@ -19,3 +21,14 @@ class DetailType(SqlAlchemyBase):
 
     def __repr__(self):
         return f"DetailType(id={self.id!r}, name={self.name!r}, description={self.description!r})"
+
+    @property
+    def as_response(self):
+        lang = get_lang()
+        return {
+            "id": self.id,
+            "order": self.order,
+            "name": self.name.get(lang),
+            "description": self.description.get(lang),
+            "required": self.required,
+        }

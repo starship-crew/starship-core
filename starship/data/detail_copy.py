@@ -1,5 +1,7 @@
 import sqlalchemy as sa
 
+from starship.helpers import get_lang
+
 from .db_session import SqlAlchemyBase
 
 
@@ -22,6 +24,33 @@ class DetailCopy(SqlAlchemyBase):
 
     def __repr__(self):
         return f"DetailCopy(id={self.id!r}, ship={self.ship!r}, kind={self.kind!r}, level={self.level!r})"
+
+    @property
+    def upgrade_cost(self):
+        return int(self.kind.cost / 2 * self.level)
+
+    @property
+    def as_response(self):
+        lang = get_lang()
+        return {
+            "id": self.id,
+            "name": self.kind.name.get(lang),
+            "description": self.kind.description.get(lang),
+            "type_id": self.kind.id,
+            "kind": self.kind.kind.as_response,
+            "health": self.health,
+            "cost": self.kind.kind.order,
+            "required": self.kind.required,
+            "level": self.level,
+            "upgrade_cost": self.upgrade_cost,
+            "power_generation": self.kind.power_generation,
+            "power_consumption": self.kind.power_consumption,
+            "accel_factor": self.kind.accel_factor,
+            "mobility": self.kind.mobility,
+            "stability": self.kind.stability,
+            "damage_absorption": self.kind.damage_absorption,
+            "damage": self.kind.damage,
+        }
 
     @classmethod
     def new(cls, kind):

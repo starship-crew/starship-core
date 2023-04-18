@@ -13,7 +13,7 @@
     <h5>Owned by <span class="text-secondary">{{garage.crew.name}}</span> crew</h4>
     <h4>Details</h4>
     <div>
-        {% for detail_type, detail_copies in details.items() if detail_copies|length != 0 %}
+        {% for detail_type, detail_copies in garage.ordered_details.items() if detail_copies|length != 0 %}
             <h3 class="mt-3">{{detail_type.name.get(lang)}}</h3>
             <div class="d-flex flex-wrap">
                 {% for dc in detail_copies %}

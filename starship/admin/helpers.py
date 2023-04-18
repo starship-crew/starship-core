@@ -60,14 +60,6 @@ def admin_required(func):
     return new_func
 
 
-# Default language
-LANG = "ru"
-
-
-def get_lang():
-    return request.args.get("lang", LANG)
-
-
 def yaml_to_sentence(text, sentence=None):
     if not sentence:
         sentence = Sentence()

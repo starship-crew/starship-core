@@ -23,3 +23,7 @@ class Crew(SqlAlchemyBase):
 
     def __repr__(self):
         return f"Crew(name={self.name!r}, currency={self.currency!r}, ship={self.ship!r}, token={self.token!r}, owner={self.owner!r})"
+
+    @property
+    def as_response(self):
+        return {"id": self.id, "currency": self.currency}

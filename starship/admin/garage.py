@@ -8,7 +8,8 @@ from starship.data.detail_type import DetailType
 from starship.data.garage import Garage
 from starship.data import db_session
 from .blueprint import admin_bp
-from .helpers import admin_required, get_lang, redirect_url
+from .helpers import admin_required, redirect_url
+from starship.helpers import get_lang
 
 
 @admin_bp.route("/garage/<int:id>")
@@ -20,23 +21,10 @@ def garage(id):
     if not garage:
         return abort(404)
 
-    detail_types = db_sess.query(DetailType).order_by(DetailType.order).all()
-    details = OrderedDict()
-    for detail_type in detail_types:
-        details[detail_type] = (
-            db_sess.query(DetailCopy)
-            .filter(DetailCopy.garage == garage)
-            .join(DetailCopy.kind)
-            .join(Detail.kind)
-            .filter(DetailType.id == detail_type.id)
-            .all()
-        )
-
     return render_template(
         "garage.html",
         title=f"Garage {garage.id}",
         garage=garage,
-        details=details,
         lang=get_lang(),
     )
 

@@ -6,7 +6,8 @@ from starship.data import db_session
 from starship.data.detail_copy import DetailCopy
 from starship.data.garage import Garage
 from .blueprint import admin_bp
-from .helpers import admin_required, redirect_url, get_lang, yaml_to_sentence
+from .helpers import admin_required, redirect_url, yaml_to_sentence
+from starship.helpers import get_lang
 from starship.data.sentence import Sentence
 from starship.data.detail_type import DetailType
 from starship.data.detail import Detail
