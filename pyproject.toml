@@ -18,6 +18,7 @@ python-dotenv = "^1.0.0"
 werkzeug = "^2.2.3"
 psycopg2 = "^2.9.5"
 pyyaml = "^6.0"
+flask-restx = "^1.1.0"
 
 [build-system]
 requires = ["poetry-core>=1.4.0"]

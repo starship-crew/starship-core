@@ -35,7 +35,7 @@ def create_inital_admin():
 
 
 def make_app():
-    from api import api_bp
+    from api.blueprint import api_bp
     from admin.blueprint import admin_bp
 
     app = Flask(__name__)

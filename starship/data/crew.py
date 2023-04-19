@@ -26,4 +26,4 @@ class Crew(SqlAlchemyBase):
 
     @property
     def as_response(self):
-        return {"id": self.id, "currency": self.currency}
+        return {"name": self.name, "currency": self.currency}
