@@ -1,6 +1,6 @@
 import sqlalchemy as sa
 
-from starship import api
+from starship.api.crew import create_crew
 from flask import flash, redirect, request
 from starship.data.crew import Crew
 from starship.data import db_session
@@ -12,7 +12,7 @@ from .helpers import admin_required, redirect_url
 @admin_bp.route("/create_crew/<name>")
 @admin_required
 def create_crew(name):
-    api.create_crew(name)
+    create_crew(name)
     return redirect(redirect_url())
 
 

@@ -12,7 +12,6 @@ from flask_restx import Resource, reqparse, inputs
 
 post_parser = reqparse.RequestParser()
 post_parser.add_argument("name", required=True)
-post_parser.add_argument("linked_users", type=inputs.natural, action="split")
 
 parser = reqparse.RequestParser()
 parser.add_argument("token", required=True)
@@ -20,41 +19,40 @@ parser.add_argument("token", required=True)
 CREW_TOKEN_LENGTH = 32
 
 
+def create_crew(name):
+    token = secrets.token_urlsafe(CREW_TOKEN_LENGTH)
+    db_sess = db_session.create_session()
+
+    ship = Ship()
+
+    starter_details = db_sess.query(Detail).filter_by(cost=0)
+    for detail in starter_details:
+        detail_copy = DetailCopy()
+        detail_copy.ship = ship
+        detail_copy.kind = detail
+        detail_copy.health = detail.health
+        ship.details.append(detail_copy)
+
+    garage = Garage()
+
+    crew = Crew()
+    crew.token = token
+    crew.name = name
+    crew.ship = ship
+    crew.garage = garage
+
+    db_sess.add(crew)
+    db_sess.commit()
+
+    return crew
+
+
 @api.route("/crew")
 class CrewResource(Resource):
     def post(self):
         args = post_parser.parse_args()
-        token = secrets.token_urlsafe(CREW_TOKEN_LENGTH)
-        db_sess = db_session.create_session()
-
-        ship = Ship()
-
-        starter_details = db_sess.query(Detail).filter_by(cost=0)
-        for detail in starter_details:
-            detail_copy = DetailCopy()
-            detail_copy.ship = ship
-            detail_copy.kind = detail
-            detail_copy.health = detail.health
-            ship.details.append(detail_copy)
-
-        garage = Garage()
-
-        crew = Crew()
-        crew.token = token
-        crew.name = args["name"]
-        crew.ship = ship
-        crew.garage = garage
-
-        linked_users = set()
-        if user_ids := args.get("linked_users", None):
-            for user in db_sess.query(User).filter(User.id.in_(user_ids)):
-                crew.owners.add(user)
-                linked_users.add(user.id)
-
-        db_sess.add(crew)
-        db_sess.commit()
-
-        return {"token": token}, 201
+        crew = create_crew(args["name"])
+        return {"token": crew.token}, 201
 
     def get(self):
         args = parser.parse_args()
