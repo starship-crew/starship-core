@@ -25,49 +25,35 @@ class DetailCopy(SqlAlchemyBase):
     def __repr__(self):
         return f"DetailCopy(id={self.id!r}, ship={self.ship!r}, kind={self.kind!r}, level={self.level!r})"
 
+    @classmethod
+    def new(cls, kind):
+        return DetailCopy(kind=kind, health=kind.health)
+
+    @property
+    def max_health(self):
+        return self.kind.health
+
     @property
     def upgrade_cost(self):
         return int(self.kind.cost / 2 * self.level)
 
     @property
-    def as_response(self):
-        lang = get_lang()
-        return {
-            "id": self.id,
-            "name": self.kind.name.get(lang),
-            "description": self.kind.description.get(lang),
-            "type_id": self.kind.id,
-            "kind": self.kind.kind.as_response,
-            "health": self.health,
-            "cost": self.kind.kind.order,
-            "required": self.kind.required,
-            "level": self.level,
-            "upgrade_cost": self.upgrade_cost,
-            "power_generation": self.kind.power_generation,
-            "power_consumption": self.kind.power_consumption,
-            "accel_factor": self.kind.accel_factor,
-            "mobility": self.kind.mobility,
-            "stability": self.kind.stability,
-            "damage_absorption": self.kind.damage_absorption,
-            "damage": self.kind.damage,
-        }
-
-    @classmethod
-    def new(cls, kind):
-        return DetailCopy(kind=kind, health=kind.health)
-
     def name(self):
         return self.kind.name
 
+    @property
     def description(self):
         return self.kind.description
 
+    @property
     def cost(self):
         return self.kind.cost
 
+    @property
     def order(self):
         return self.kind.kind.order
 
+    @property
     def required(self):
         return self.kind.kind.required
 
@@ -109,3 +95,28 @@ class DetailCopy(SqlAlchemyBase):
 
         if self.garage:
             return self.garage.crew
+
+    @property
+    def as_response(self):
+        lang = get_lang()
+        return {
+            "id": self.id,
+            "name": self.name.get(lang),
+            "description": self.description.get(lang),
+            "type_id": self.kind.id,
+            "kind": self.kind.kind.as_response,
+            "health": self.health,
+            "max_health": self.max_health,
+            "order": self.order,
+            "required": self.required,
+            "level": self.level,
+            "cost": self.cost,
+            "upgrade_cost": self.upgrade_cost,
+            "power_generation": self.kind.power_generation,
+            "power_consumption": self.kind.power_consumption,
+            "accel_factor": self.kind.accel_factor,
+            "mobility": self.kind.mobility,
+            "stability": self.kind.stability,
+            "damage_absorption": self.kind.damage_absorption,
+            "damage": self.kind.damage,
+        }
