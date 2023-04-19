@@ -29,41 +29,41 @@ class Ship(SqlAlchemyBase):
 
     @property
     def damage_absorption(self) -> float:
-        return sum(map(lambda d: d.damage_absorption, self.details))
+        return sum(map(lambda d: d.kind.damage_absorption, self.details))
 
     @property
     def damage(self):
-        return sum(map(lambda d: d.damage, self.details))
+        return sum(map(lambda d: d.kind.damage, self.details))
 
     @property
     def stability(self) -> float:
-        return sum(map(lambda d: d.stability, self.details))
+        return sum(map(lambda d: d.kind.stability, self.details))
 
     @property
     def power_generation(self):
-        return sum(map(lambda d: d.power_generation, self.details))
+        return sum(map(lambda d: d.kind.power_generation, self.details))
 
     @property
     def power_consumption(self):
-        return sum(map(lambda d: d.power_consumption, self.details))
+        return sum(map(lambda d: d.kind.power_consumption, self.details))
 
     @property
     def accel_factor(self) -> float:
-        return sum(map(lambda d: d.accel_factor, self.details))
+        return sum(map(lambda d: d.kind.accel_factor, self.details))
 
     @property
     def detail_limit(self):
-        return sum(map(lambda d: d.detail_limit, self.details))
+        return sum(map(lambda d: d.kind.detail_limit, self.details))
 
     @property
     def mobility(self) -> float:
-        return sum(map(lambda d: d.detail_limit, self.details))
+        return sum(map(lambda d: d.kind.mobility, self.details))
 
     @property
     def as_response(self):
         return {
             "shame": self.shame,
-            "detail_copies": [dc.as_response() for dc in self.details],
+            "detail_copies": [dc.as_response for dc in self.details],
             "health": self.health,
             "mobility": self.mobility,
             "damage_absorption": self.damage_absorption,

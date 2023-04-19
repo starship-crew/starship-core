@@ -25,4 +25,10 @@ class StoreResource(Resource):
                 .all()
             )
 
-        return {dt.as_response: d.as_response for dt, d in details.items()}, 200
+        return {
+            "detail_types": [dt.as_response for dt in detail_types],
+            "details": {
+                dt.id: [detail.as_response for detail in details]
+                for dt, details in details.items()
+            },
+        }, 200

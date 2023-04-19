@@ -17,12 +17,14 @@ class Detail(SqlAlchemyBase):
     cost = sa.Column(sa.Integer, nullable=False)
     health = sa.Column(sa.Integer, nullable=False)
 
-    power_generation = sa.Column(sa.Integer)
-    accel_factor = sa.Column(sa.Float)
-    damage_absorption = sa.Column(sa.Integer)
-    damage = sa.Column(sa.Integer)
-    stability = sa.Column(sa.Float)
-    mobility = sa.Column(sa.Float)
+    power_generation = sa.Column(sa.Integer, default=0)
+    power_consumption = sa.Column(sa.Integer, default=0)
+    accel_factor = sa.Column(sa.Float, default=0.0)
+    damage_absorption = sa.Column(sa.Integer, default=0)
+    damage = sa.Column(sa.Integer, default=0)
+    stability = sa.Column(sa.Float, default=0.0)
+    mobility = sa.Column(sa.Float, default=0.0)
+    detail_limit = sa.Column(sa.Integer, default=0)
 
     name_id = sa.Column(sa.Integer, sa.ForeignKey("sentences.id"))
     name = sa.orm.relationship("Sentence", foreign_keys=[name_id])
@@ -45,11 +47,11 @@ class Detail(SqlAlchemyBase):
         return yaml.dump(obj, allow_unicode=True)
 
     @property
-    def as_reponse(self):
+    def as_response(self):
         lang = get_lang()
         return {
             "id": self.id,
-            "kind": self.kind.as_response(lang),
+            "kind": self.kind.as_response,
             "name": self.name.get(lang),
             "description": self.description.get(lang),
             "cost": self.cost,
@@ -60,4 +62,5 @@ class Detail(SqlAlchemyBase):
             "damage": self.damage,
             "stability": self.stability,
             "mobility": self.mobility,
+            "detail_limit": self.detail_limit,
         }
