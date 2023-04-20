@@ -42,6 +42,11 @@ ERRORS = {
         "en": "Wrong value of action query argument",
         "ru": "Неправильное значение action query-аргумента",
     },
+    "detail_not_found": {
+        "code": 404,
+        "en": "Could not find detail with provided id",
+        "ru": "Деталь с заданным id не найдена",
+    },
 }
 
 

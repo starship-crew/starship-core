@@ -1,5 +1,6 @@
 import yaml
 import sqlalchemy as sa
+from starship.data.detail_copy import DetailCopy
 
 from starship.helpers import get_lang
 
