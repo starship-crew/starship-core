@@ -35,7 +35,9 @@ class DetailCopy(SqlAlchemyBase):
 
     @property
     def upgrade_cost(self):
-        return int(self.kind.cost / 2 * self.level)
+        if (not_starter := int(self.kind.cost / 2 * self.level)) != 0:
+            return not_starter
+        return 10 * self.level
 
     @property
     def name(self):
@@ -86,6 +88,7 @@ class DetailCopy(SqlAlchemyBase):
             self.ship.details.remove(self)
             self.ship = None
 
+    @property
     def crew(self):
         """Returns crew which owns this detail or None if it's orphan (has no
         linked crew's ship or one's garage)"""

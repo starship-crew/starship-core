@@ -32,6 +32,16 @@ ERRORS = {
         "en": "Crew with this name already exists",
         "ru": "Экипаж с данным именем уже существует",
     },
+    "action_argument_not_provided": {
+        "code": 400,
+        "en": "action query argument was not provided",
+        "ru": "action query-аргумент не был предоставлен",
+    },
+    "action_argument_wrong": {
+        "code": 400,
+        "en": "Wrong value of action query argument",
+        "ru": "Неправильное значение action query-аргумента",
+    },
 }
 
 
