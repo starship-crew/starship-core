@@ -19,6 +19,8 @@ class Crew(SqlAlchemyBase):
     combat_id = sa.Column(sa.Integer, sa.ForeignKey("combats.id"))
     combat = sa.orm.relationship("Combat", foreign_keys=[combat_id])
 
+    searching = sa.Column(sa.Boolean, default=False)
+
     owners: sa.orm.Mapped[Set["User"]] = sa.orm.relationship(
         secondary="crew_groups",
         back_populates="crews",
