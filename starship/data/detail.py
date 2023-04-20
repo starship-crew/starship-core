@@ -28,10 +28,20 @@ class Detail(SqlAlchemyBase):
     detail_limit = sa.Column(sa.Integer, default=0)
 
     name_id = sa.Column(sa.Integer, sa.ForeignKey("sentences.id"))
-    name = sa.orm.relationship("Sentence", foreign_keys=[name_id])
+    name = sa.orm.relationship(
+        "Sentence",
+        foreign_keys=[name_id],
+        cascade="all, delete-orphan",
+        single_parent=True,
+    )
 
     description_id = sa.Column(sa.Integer, sa.ForeignKey("sentences.id"))
-    description = sa.orm.relationship("Sentence", foreign_keys=[description_id])
+    description = sa.orm.relationship(
+        "Sentence",
+        foreign_keys=[description_id],
+        cascade="all, delete-orphan",
+        single_parent=True,
+    )
 
     def __repr__(self):
         return f"Detail(id={self.id!r}, name={self.name!r}, description={self.description!r}, kind={self.kind!r}, cost={self.cost!r}, ...)"

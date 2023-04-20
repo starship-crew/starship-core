@@ -11,7 +11,12 @@ class Ship(SqlAlchemyBase):
     id = sa.Column(sa.Integer, primary_key=True, autoincrement=True)
 
     shame_id = sa.Column(sa.Integer, sa.ForeignKey("sentences.id"))
-    shame = sa.orm.relationship("Sentence", foreign_keys=[shame_id])
+    shame = sa.orm.relationship(
+        "Sentence",
+        foreign_keys=[shame_id],
+        cascade="all, delete-orphan",
+        single_parent=True,
+    )
 
     crew_id = sa.Column(sa.Integer, sa.ForeignKey("crews.id"))
     crew = sa.orm.relationship("Crew", back_populates="ship", foreign_keys=[crew_id])

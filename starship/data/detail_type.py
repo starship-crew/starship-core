@@ -12,10 +12,20 @@ class DetailType(SqlAlchemyBase):
     order = sa.Column(sa.Integer, autoincrement=True)
 
     name_id = sa.Column(sa.Integer, sa.ForeignKey("sentences.id"))
-    name = sa.orm.relationship("Sentence", foreign_keys=[name_id])
+    name = sa.orm.relationship(
+        "Sentence",
+        foreign_keys=[name_id],
+        cascade="all, delete-orphan",
+        single_parent=True,
+    )
 
     description_id = sa.Column(sa.Integer, sa.ForeignKey("sentences.id"))
-    description = sa.orm.relationship("Sentence", foreign_keys=[description_id])
+    description = sa.orm.relationship(
+        "Sentence",
+        foreign_keys=[description_id],
+        cascade="all, delete-orphan",
+        single_parent=True,
+    )
 
     required = sa.Column(sa.Boolean, default=False)
 

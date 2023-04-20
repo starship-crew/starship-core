@@ -61,6 +61,7 @@ def create_detail_type():
             else Sentence()
         )
         detail_type.required = form.required.data
+        detail_type.order = db_sess.query(DetailType).count() + 1
         db_sess.add(detail_type)
         db_sess.commit()
         return redirect(url_for("admin_bp.detail_management"))
