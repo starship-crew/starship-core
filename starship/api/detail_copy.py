@@ -20,7 +20,22 @@ class DetailCopyResource(Resource):
         if not (crew := get_crew(db_sess, args["token"])):
             return error.response("crew_not_found")
 
-        if not (dc := db_sess.query(DetailCopy).filter_by(id=id).first()):
+        if not (dc := db_sess.query(DetailCopy).filter_by(id=args["id"]).first()):
+            return error.response("dc_not_found")
+
+        if dc.crew != crew:
+            return error.response("dc_does_not_belong_to_crew")
+
+        return dc.as_response, 200
+
+    def put(self):
+        args = parser.parse_args()
+        db_sess = db_session.create_session()
+
+        if not (crew := get_crew(db_sess, args["token"])):
+            return error.response("crew_not_found")
+
+        if not (dc := db_sess.query(DetailCopy).filter_by(id=args["id"]).first()):
             return error.response("dc_not_found")
 
         if dc.crew != crew:
