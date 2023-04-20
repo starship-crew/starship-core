@@ -16,6 +16,9 @@ class Crew(SqlAlchemyBase):
     ship = sa.orm.relationship("Ship", uselist=False, back_populates="crew")
     garage = sa.orm.relationship("Garage", uselist=False, back_populates="crew")
 
+    combat_id = sa.Column(sa.Integer, sa.ForeignKey("combats.id"))
+    combat = sa.orm.relationship("Combat", foreign_keys=[combat_id])
+
     owners: sa.orm.Mapped[Set["User"]] = sa.orm.relationship(
         secondary="crew_groups",
         back_populates="crews",
