@@ -64,9 +64,12 @@ def yaml_to_sentence(text, sentence=None):
     if not sentence:
         sentence = Sentence()
 
-    pyobj = yaml.load(text, YamlLoader).items()
+    try:
+        pyobj = yaml.load(text, YamlLoader).items()
 
-    for lang, value in pyobj:
-        sentence.__setattr__(lang, value)
+        for lang, value in pyobj:
+            sentence.__setattr__(lang, value)
+    except AttributeError:
+        pass
 
     return sentence

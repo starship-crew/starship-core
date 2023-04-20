@@ -7,7 +7,7 @@ from starship.data.detail_copy import DetailCopy
 from starship.data.garage import Garage
 from .blueprint import admin_bp
 from .helpers import admin_required, redirect_url, yaml_to_sentence
-from starship.helpers import get_lang
+from starship.helpers import get_detail_types, get_lang, get_ordered_details
 from starship.data.sentence import Sentence
 from starship.data.detail_type import DetailType
 from starship.data.detail import Detail
@@ -26,23 +26,13 @@ from flask import flash, redirect, render_template, request, url_for
 def detail_management():
     db_sess = db_session.create_session()
 
-    detail_types = db_sess.query(DetailType).order_by(DetailType.order).all()
-    details = OrderedDict()
-    for detail_type in detail_types:
-        details[detail_type] = (
-            db_sess.query(Detail)
-            .filter_by(kind=detail_type)
-            .order_by(Detail.cost)
-            .all()
-        )
-
     return render_template(
         "details.html",
         title="Detail Management",
         details_page=True,
         lang=get_lang(),
-        detail_types=detail_types,
-        details=details,
+        detail_types=get_detail_types(db_sess),
+        details=get_ordered_details(db_sess),
     )
 
 
@@ -180,10 +170,13 @@ def delete_detail_type(id):
 
 
 def apply_yaml_chars_on_detail(detail, chars):
-    pyobj = yaml.load(chars, YamlLoader).items()
+    try:
+        pyobj = yaml.load(chars, YamlLoader).items()
 
-    for lang, value in pyobj:
-        detail.__setattr__(lang, value)
+        for lang, value in pyobj:
+            detail.__setattr__(lang, value)
+    except AttributeError:
+        pass
 
 
 @admin_bp.route("/create_detail", methods=["GET", "POST"])
@@ -193,10 +186,7 @@ def create_detail():
     form = DetailCreationForm()
     lang = get_lang()
 
-    form.kind.choices = [
-        (dt.id, dt.name.__getattribute__(lang))
-        for dt in db_sess.query(DetailType).all()
-    ]
+    form.kind.choices = [(dt.id, dt.name.get(lang)) for dt in get_detail_types(db_sess)]
 
     if form.validate_on_submit():
         detail = Detail()

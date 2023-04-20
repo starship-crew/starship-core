@@ -1,5 +1,7 @@
 import sqlalchemy as sa
 import secrets
+
+from starship.helpers import get_crew
 from . import error
 from starship.data import db_session
 from starship.data.crew import Crew
@@ -51,6 +53,7 @@ def create_crew(name):
 class CrewResource(Resource):
     def post(self):
         args = post_parser.parse_args()
+
         try:
             token = create_crew(args["name"])
             return {"token": token}, 201
@@ -60,9 +63,8 @@ class CrewResource(Resource):
     def get(self):
         args = parser.parse_args()
         db_sess = db_session.create_session()
-        crew = db_sess.query(Crew).filter_by(token=args["token"]).first()
 
-        if not crew:
+        if not (crew := get_crew(db_sess, args["token"])):
             return error.response("crew_not_found")
 
         return crew.as_response

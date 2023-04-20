@@ -49,11 +49,13 @@ class Detail(SqlAlchemyBase):
     def chars_to_yaml(self):
         obj = {
             "power_generation": self.power_generation,
+            "power_consumption": self.power_consumption,
             "accel_factor": self.accel_factor,
             "damage_absorption": self.damage_absorption,
             "damage": self.damage,
             "stability": self.stability,
             "mobility": self.mobility,
+            "detail_limit": self.detail_limit,
         }
         return yaml.dump(obj, allow_unicode=True)
 

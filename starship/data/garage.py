@@ -1,13 +1,14 @@
-from collections import OrderedDict
 import sqlalchemy as sa
 
 from typing import List
-from starship.data.detail import Detail
+from collections import OrderedDict
 from starship.data.detail_copy import DetailCopy
 
 from starship.data.detail_type import DetailType
+from starship.helpers import get_ordered_detail_copies
 
-from .db_session import SqlAlchemyBase, create_session
+from . import db_session
+from .db_session import SqlAlchemyBase
 
 
 class Garage(SqlAlchemyBase):
@@ -27,22 +28,10 @@ class Garage(SqlAlchemyBase):
 
     @property
     def ordered_details(self) -> OrderedDict[DetailType, DetailCopy]:
-        db_sess = create_session()
-
-        detail_types = db_sess.query(DetailType).order_by(DetailType.order).all()
-        details = OrderedDict()
-
-        for detail_type in detail_types:
-            details[detail_type] = (
-                db_sess.query(DetailCopy)
-                .filter(DetailCopy.garage == self)
-                .join(DetailCopy.kind)
-                .join(Detail.kind)
-                .filter(DetailType.id == detail_type.id)
-                .all()
-            )
-
-        return details
+        return get_ordered_detail_copies(
+            db_session.create_session(),
+            lambda q, dt: q.filter(DetailCopy.garage == self),
+        )
 
     @property
     def as_response(self):
