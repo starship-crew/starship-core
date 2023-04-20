@@ -41,17 +41,25 @@ class DetailCopyResource(Resource):
         if dc.crew != crew:
             return error.response("dc_does_not_belong_to_crew")
 
-        if args.get("action", None):
-            match args["action"]:
-                case "put_on":
-                    dc.put_on()
-                case "put_off":
-                    dc.put_off()
-                case "upgrade":
-                    if dc.crew.currency < dc.upgrade_cost:
-                        return error.response("not_enough_currency")
+        match action := args.get("action", None):
+            case None:
+                return error.response("action_argument_not_provided")
+            case "put_on":
+                dc.put_on()
+            case "put_off":
+                dc.put_off()
+            case "upgrade":
+                if dc.crew.currency < dc.upgrade_cost:
+                    return error.response("not_enough_currency")
 
-                    dc.crew.currency -= dc.upgrade_cost
-                    dc.level += 1
+                dc.crew.currency -= dc.upgrade_cost
+                dc.level += 1
+            case _:
+                return error.response("action_argument_wrong")
 
-        return dc.as_response, 200
+        db_sess.commit()
+
+        return {
+            "detail_copy_id": args["id"],
+            "action": action,
+        }
