@@ -2,6 +2,11 @@ import sqlalchemy as sa
 
 from typing import List
 
+from starship.data.detail import Detail
+from starship.data.detail_copy import DetailCopy
+from starship.data.detail_type import DetailType
+
+from . import db_session
 from .db_session import SqlAlchemyBase
 
 
@@ -79,3 +84,17 @@ class Ship(SqlAlchemyBase):
             "accel_factor": self.accel_factor,
             "detail_limit": self.detail_limit,
         }
+
+    def detail(self, detail_type_string_id):
+        """Checks whether ship has a detail with the type provided and if it
+        does, it returns its model"""
+
+        db_sess = db_session.create_session()
+        return (
+            db_sess.query(DetailCopy)
+            .filter_by(ship=self)
+            .join(DetailCopy.kind)
+            .join(Detail.kind)
+            .filter(DetailType.string_id == detail_type_string_id)
+            .first()
+        )
