@@ -4,7 +4,7 @@ from flask import request
 from starship.data.crew import Crew
 
 
-LANG = "en"
+LANG = "ru"
 
 
 def get_lang():
