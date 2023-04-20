@@ -22,6 +22,7 @@ ERRORS = {
         "code": 405,
         "en": "Insufficient funds for the transaction",
     },
+    "crew_already_exists": {"code": 409, "en": "Crew with this name already exists"},
 }
 
 

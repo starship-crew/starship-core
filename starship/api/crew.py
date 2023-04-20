@@ -1,3 +1,4 @@
+import sqlalchemy as sa
 import secrets
 from . import error
 from starship.data import db_session
@@ -6,9 +7,8 @@ from starship.data.detail import Detail
 from starship.data.detail_copy import DetailCopy
 from starship.data.garage import Garage
 from starship.data.ship import Ship
-from starship.data.user import User
 from .blueprint import api
-from flask_restx import Resource, reqparse, inputs
+from flask_restx import Resource, reqparse
 
 post_parser = reqparse.RequestParser()
 post_parser.add_argument("name", required=True)
@@ -44,15 +44,18 @@ def create_crew(name):
     db_sess.add(crew)
     db_sess.commit()
 
-    return crew
+    return token
 
 
 @api.route("/crew")
 class CrewResource(Resource):
     def post(self):
         args = post_parser.parse_args()
-        crew = create_crew(args["name"])
-        return {"token": crew.token}, 201
+        try:
+            token = create_crew(args["name"])
+            return {"token": token}, 201
+        except sa.exc.IntegrityError:
+            return error.response("crew_already_exists")
 
     def get(self):
         args = parser.parse_args()
