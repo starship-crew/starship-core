@@ -44,6 +44,7 @@ def create_detail_type():
     if form.validate_on_submit():
         db_sess = db_session.create_session()
         detail_type = DetailType()
+        detail_type.string_id = form.string_id.data
         detail_type.name = yaml_to_sentence(form.name.data)
         detail_type.description = (
             yaml_to_sentence(form.description.data)
@@ -135,6 +136,7 @@ def edit_detail_type(id):
             if form.description.data
             else Sentence()
         )
+        dt.string_id = form.string_id.data
         dt.required = form.required.data
         db_sess.commit()
         return redirect(url_for("admin_bp.detail_management"))

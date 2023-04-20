@@ -8,6 +8,16 @@
     <h1>Create a new Detail Type</h1>
 
     <p>
+        {{ form.string_id.label }}<br>
+        {{ form.string_id(class="form-control") }}
+        {% for error in form.string_id.errors %}
+        <div class="alert alert-danger" role="alert">
+            {{ error }}
+        </div>
+        {% endfor %}
+    </p>
+
+    <p>
         {{ form.name.label }}<br>
         {{ form.name(class="form-control", placeholder="en: Detail type name example\nru: Пример наименования типа детали") }}<br>
         {% for error in form.name.errors %}

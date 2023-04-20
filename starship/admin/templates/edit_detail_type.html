@@ -8,6 +8,16 @@
     <h1>Edit Detail Type</h1>
 
     <p>
+        {{ form.string_id.label }}<br>
+        {{ form.string_id(class="form-control", value=dt.string_id) }}
+        {% for error in form.string_id.errors %}
+        <div class="alert alert-danger" role="alert">
+            {{ error }}
+        </div>
+        {% endfor %}
+    </p>
+
+    <p>
         {{ form.name.label }}<br>
         <textarea class="form-control" name="{{form.name.name}}" id="{{form.name.id}}"
                   placeholder="en: Detail type name example

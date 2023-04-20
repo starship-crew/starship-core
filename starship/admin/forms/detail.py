@@ -4,6 +4,7 @@ from wtforms.fields import (
     SelectField,
     BooleanField,
     IntegerField,
+    StringField,
     SubmitField,
     TextAreaField,
 )
@@ -14,6 +15,7 @@ from starship.admin.helpers import YamlValidator
 class DetailTypeCreationForm(FlaskForm):
     name = TextAreaField("Name", validators=[DataRequired(), YamlValidator()])
     description = TextAreaField("Description", validators=[YamlValidator()])
+    string_id = StringField("String identifier", validators=[DataRequired()])
     required = BooleanField("Required by any ship to work", default=False)
     submit = SubmitField("Create")
 

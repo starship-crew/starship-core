@@ -4,7 +4,7 @@
 
 <div class="container-fluid w-50">
     <div class="d-flex justify-content-between">
-        <h3>Detail Type</h3>
+        <h3>Detail Type {{dt.string_id}}</h3>
         <ul class="nav nav-pills">
             <li class="nav-item">
                 <a class="nav-link {%- if lang == 'en' %} active{%- endif -%}" href="{{url_for('admin_bp.detail_type', id=dt.id, lang='en')}}">EN</a>
