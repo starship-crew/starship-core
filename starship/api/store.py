@@ -15,7 +15,7 @@ class StoreResource(Resource):
         return {
             "detail_types": [dt.as_response for dt in get_detail_types(db_sess)],
             "details": {
-                dt.id: [detail.as_response for detail in details]
+                dt.string_id: [detail.as_response for detail in details]
                 for dt, details in get_ordered_details(db_sess).items()
             },
         }, 200
