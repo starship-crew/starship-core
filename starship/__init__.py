@@ -1,5 +1,6 @@
 import os
 
+from . import combat
 from .data import db_session
 
 from flask import Flask

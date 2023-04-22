@@ -11,4 +11,5 @@ if __name__ == "__main__":
     SERVER_PORT = os.getenv("SERVER_PORT", SERVER_FALLBACK_PORT)
     WORKERS = 2
 
+    starship.combat.run_handlers()
     pyruvate.serve(starship.make_app(), f"0.0.0.0:{SERVER_PORT}", WORKERS)
