@@ -16,16 +16,18 @@ config = context.config
 # fron the host env
 section = config.config_ini_section
 
-if not (
-    (db_user := os.getenv("DB_USER"))
-    and (db_pass := os.getenv("DB_PASS"))
-    and (db_host := os.getenv("DB_HOST"))
-):
-    raise KeyError("Must provide DB_USER, DB_PASS, DB_HOST env vars")
+if not os.getenv("DB_USER"):
+    print("Warning: using default value for DB_USER env var: root")
 
-config.set_section_option(section, "DB_USER", db_user)
-config.set_section_option(section, "DB_PASS", db_pass)
-config.set_section_option(section, "DB_HOST", db_host)
+if not os.getenv("DB_PASS"):
+    print("Warning: using default value for DB_PASS env var: toor")
+
+if not os.getenv("DB_HOST"):
+    print("Warning: using default value for DB_HOST env var: localhost")
+
+config.set_section_option(section, "DB_USER", os.getenv("DB_USER", "root"))
+config.set_section_option(section, "DB_PASS", os.getenv("DB_PASS", "toor"))
+config.set_section_option(section, "DB_HOST", os.getenv("DB_HOST", "localhost"))
 
 # Interpret the config file for Python logging.
 # This line sets up loggers basically.
