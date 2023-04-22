@@ -21,6 +21,8 @@ class Crew(SqlAlchemyBase):
 
     searching = sa.Column(sa.Boolean, default=False)
 
+    action = sa.Column(sa.Integer)
+
     owners: sa.orm.Mapped[Set["User"]] = sa.orm.relationship(
         secondary="crew_groups",
         back_populates="crews",
