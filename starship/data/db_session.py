@@ -1,11 +1,9 @@
 import sqlalchemy as sa
 import os
 
-from flask import request
 import sqlalchemy.orm as orm
 from sqlalchemy.orm import Session
 import sqlalchemy.ext.declarative as dec
-from urllib.parse import urlparse, urljoin
 
 SqlAlchemyBase = dec.declarative_base()
 
