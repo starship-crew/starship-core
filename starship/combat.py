@@ -60,11 +60,16 @@ def combat_connector():
 
 def combat_action_handler():
     """Constantly handles actions of different crews in a combat."""
-    pass
+    db_sess = db_session.create_session()
+
+    while True:
+        for crew in db_sess.query(Crew).filter(Crew.active, Crew.action != None):
+            pass
+        sleep(0.5)
 
 
 connector = Process(target=combat_connector, name="CombatConnector")
-action_handler = Process(target=combat_connector, name="CombatActionHandler")
+action_handler = Process(target=combat_action_handler, name="CombatActionHandler")
 
 
 def run_handlers():
