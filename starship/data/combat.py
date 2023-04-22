@@ -1,5 +1,6 @@
 from typing import List
 import sqlalchemy as sa
+from sqlalchemy.orm import Mapped, relationship
 
 from starship.data.crew import Crew
 
@@ -10,9 +11,7 @@ class Combat(SqlAlchemyBase):
     __tablename__ = "combats"
 
     id = sa.Column(sa.Integer, primary_key=True, autoincrement=True)
-
-    crews: sa.orm.Mapped[List["Crew"]] = sa.orm.relationship(secondary="combat_groups")
-    active = sa.Column(sa.Integer)
+    crews: Mapped[List["Crew"]] = relationship(back_populates="combat")
 
     def __repr__(self):
-        return f"Combat(active={self.active_id!r}, passive={self.passive_id!r})"
+        return f"Combat(crews={self.crews!r})"

@@ -17,7 +17,8 @@ class Crew(SqlAlchemyBase):
     garage = sa.orm.relationship("Garage", uselist=False, back_populates="crew")
 
     combat_id = sa.Column(sa.Integer, sa.ForeignKey("combats.id"))
-    combat = sa.orm.relationship("Combat", foreign_keys=[combat_id])
+    combat = sa.orm.relationship("Combat", back_populates="crews")
+    active = sa.Column(sa.Boolean, default=False)
 
     searching = sa.Column(sa.Boolean, default=False)
 
@@ -29,7 +30,7 @@ class Crew(SqlAlchemyBase):
     )
 
     def __repr__(self):
-        return f"Crew(name={self.name!r}, currency={self.currency!r}, ship={self.ship!r}, token={self.token!r}, owner={self.owner!r})"
+        return f"Crew(name={self.name!r}, currency={self.currency!r})"
 
     @property
     def as_response(self):

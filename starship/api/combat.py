@@ -21,9 +21,8 @@ class CombatResource(Resource):
 
         if not crew.combat:
             crew.searching = True
+            db_sess.commit()
             return {"action": "searching"}
-
-        db_sess.commit()
 
     def post(self):
         args = parser.parse_args()

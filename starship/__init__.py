@@ -47,7 +47,6 @@ def make_app():
 
     app.config["SECRET_KEY"] = get_secret_key()
 
-    db_session.global_init()
     login_manager.init_app(app)
 
     with app.app_context():
