@@ -37,7 +37,7 @@ class Garage(SqlAlchemyBase):
     def as_response(self):
         return {
             "detail_types": [dt.as_response for dt in self.ordered_details.keys()],
-            "details": {
+            "detail_copies": {
                 dt.string_id: [detail.as_response for detail in details]
                 for dt, details in self.ordered_details.items()
             },
