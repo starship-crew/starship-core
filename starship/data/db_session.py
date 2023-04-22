@@ -32,15 +32,6 @@ def get_db_url():
     return f"postgresql+psycopg2://{POSTGRES_USER}:{get_postgres_password()}@{POSTGRES_HOST}:5432/{POSTGRES_DATABASE}"
 
 
-def is_safe_url(target):
-    """A function that ensures that a redirect target will lead to the same server."""
-
-    ref_url = urlparse(request.host_url)
-    test_url = urlparse(urljoin(request.host_url, target))
-
-    return test_url.scheme in ("http", "https") and ref_url.netloc == test_url.netloc
-
-
 def global_init():
     global __factory
 
