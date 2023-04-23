@@ -47,6 +47,16 @@ ERRORS = {
         "en": "Could not find detail with provided id",
         "ru": "Деталь с заданным id не найдена",
     },
+    "dt_not_found": {
+        "code": 404,
+        "en": "Could not find detail type with provided identifier",
+        "ru": "Вид детали с заданным идентификатором не найден",
+    },
+    "dt_key_attr_error": {
+        "code": 404,
+        "en": "Detail type does not have such attribute",
+        "ru": "Вид детали не имеет данного атрибута",
+    },
 }
 
 

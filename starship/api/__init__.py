@@ -6,3 +6,4 @@ from . import garage
 from . import store
 from . import detail_copy
 from . import detail
+from . import detail_type
