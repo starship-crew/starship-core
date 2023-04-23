@@ -88,10 +88,10 @@ def combat_action_handler():
 
     while True:
         for crew in db_sess.query(Crew).filter(Crew.active, Crew.action != None):
-            opponent = crew.opponent()
-            apply_action(db_sess, crew, opponent)
+            enemy = crew.opponent
+            apply_action(db_sess, crew, enemy)
             crew.active = False
-            opponent.active = True
+            enemy.active = True
             db_sess.commit()
         sleep(0.5)
 
