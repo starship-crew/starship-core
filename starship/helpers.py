@@ -1,10 +1,8 @@
-# Default language
 from collections import OrderedDict
 from flask import request
 
-from starship.data.crew import Crew
 
-
+# Default language
 LANG = "ru"
 
 
@@ -13,6 +11,8 @@ def get_lang():
 
 
 def get_crew(db_sess, token):
+    from starship.data.crew import Crew
+
     return db_sess.query(Crew).filter_by(token=token).first()
 
 

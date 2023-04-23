@@ -67,6 +67,11 @@ ERRORS = {
         "en": "Detail type does not have such attribute",
         "ru": "Вид детали не имеет данного атрибута",
     },
+    "part_not_found": {
+        "code": 404,
+        "en": "Could not find detail copy with provided identifier and linked with the enemy ship",
+        "ru": "Экземпляр детали с заданным идентификатором и связанный с кораблем соперника не найден",
+    },
 }
 
 

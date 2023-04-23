@@ -1,14 +1,15 @@
-from starship.data.crew import Action
+from starship.data.action import Action, ActionKind
+from starship.data.detail_copy import DetailCopy
 from . import error
 from starship.data import db_session
 from starship.helpers import get_crew
 from .blueprint import api
-from flask_restx import Resource, reqparse
+from flask_restx import Resource, reqparse, inputs
 
 parser = reqparse.RequestParser()
 parser.add_argument("token", required=True)
 parser.add_argument("action", required=False)
-parser.add_argument("part", required=False)
+parser.add_argument("part", required=False, type=inputs.natural)
 
 
 @api.route("/combat")
@@ -44,13 +45,21 @@ class CombatResource(Resource):
             return error.response("action_argument_not_provided")
 
         try:
-            action = Action[args["action"]]
+            kind = ActionKind[args["action"]]
         except KeyError:
             return error.response("action_argument_wrong")
 
         if not (crew := get_crew(db_sess, args["token"])):
             return error.response("crew_not_found")
 
-        crew.action = action
+        if (
+            args["part"]
+            and not db_sess.query(DetailCopy)
+            .filter_by(id=args["part"], ship=crew.ship)
+            .first()
+        ):
+            return error.response("part_not_found")
+
+        crew.action = Action(kind=kind, part=args["part"])
         db_sess.commit()
-        return {"action": action.as_response}
+        return crew.action.as_response
