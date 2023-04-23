@@ -9,7 +9,7 @@
 
     <p>
         {{ form.string_id.label }}<br>
-        {{ form.string_id(class="form-control", value=dt.string_id) }}
+        {{ form.string_id(class="form-control", value=dt.id) }}
         {% for error in form.string_id.errors %}
         <div class="alert alert-danger" role="alert">
             {{ error }}

@@ -8,8 +8,7 @@ from .db_session import SqlAlchemyBase
 class DetailType(SqlAlchemyBase):
     __tablename__ = "detail_types"
 
-    id = sa.Column(sa.Integer, primary_key=True, autoincrement=True)
-    string_id = sa.Column(sa.String, unique=True, nullable=False)
+    id = sa.Column(sa.String, primary_key=True)
     order = sa.Column(sa.Integer, autoincrement=True)
 
     name_id = sa.Column(sa.Integer, sa.ForeignKey("sentences.id"))
@@ -38,7 +37,6 @@ class DetailType(SqlAlchemyBase):
         lang = get_lang()
         return {
             "id": self.id,
-            "string_id": self.string_id,
             "order": self.order,
             "name": self.name.get(lang),
             "description": self.description.get(lang),

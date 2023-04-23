@@ -2,6 +2,15 @@ import sqlalchemy as sa
 
 from typing import Set
 from .db_session import SqlAlchemyBase
+from enum import Enum, auto
+
+
+class Action(Enum):
+    Attack = auto()
+    Dodge = auto()
+    FoolGiveUp = auto()
+    SmartGiveUp = auto()
+    SelfDestruct = auto()
 
 
 class Crew(SqlAlchemyBase):
@@ -22,7 +31,7 @@ class Crew(SqlAlchemyBase):
 
     searching = sa.Column(sa.Boolean, default=False)
 
-    action = sa.Column(sa.Integer)
+    action = sa.Column(sa.Enum(Action))
 
     owners: sa.orm.Mapped[Set["User"]] = sa.orm.relationship(
         secondary="crew_groups",

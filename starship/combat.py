@@ -2,7 +2,7 @@ from multiprocessing import Process
 from time import sleep
 from starship.data import db_session
 from starship.data.combat import Combat
-from starship.data.crew import Crew
+from starship.data.crew import Action, Crew
 
 from pprint import pprint
 
@@ -63,7 +63,7 @@ def combat_action_handler():
     db_sess = db_session.create_session()
 
     while True:
-        for crew in db_sess.query(Crew).filter(Crew.active, Crew.action != None):
+        for crew in db_sess.query(Crew).filter(Crew.active, Crew.action == None):
             pass
         sleep(0.5)
 

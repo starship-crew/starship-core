@@ -44,7 +44,7 @@ def create_detail_type():
     if form.validate_on_submit():
         db_sess = db_session.create_session()
         detail_type = DetailType()
-        detail_type.string_id = form.string_id.data
+        detail_type.id = form.string_id.data
         detail_type.name = yaml_to_sentence(form.name.data)
         detail_type.description = (
             yaml_to_sentence(form.description.data)
@@ -65,7 +65,7 @@ def create_detail_type():
     )
 
 
-@admin_bp.route("/detail_type/<int:id>")
+@admin_bp.route("/detail_type/<id>")
 @admin_required
 def detail_type(id):
     db_sess = db_session.create_session()
@@ -82,7 +82,7 @@ def detail_type(id):
     )
 
 
-@admin_bp.route("/detail_type/<int:id>/change_order")
+@admin_bp.route("/detail_type/<id>/change_order")
 def change_detail_type_order(id):
     db_sess = db_session.create_session()
 
@@ -117,7 +117,7 @@ def change_detail_type_order(id):
     return redirect(redirect_url())
 
 
-@admin_bp.route("/detail_type/<int:id>/edit", methods=["GET", "POST"])
+@admin_bp.route("/detail_type/<id>/edit", methods=["GET", "POST"])
 @admin_required
 def edit_detail_type(id):
     db_sess = db_session.create_session()
@@ -130,13 +130,14 @@ def edit_detail_type(id):
     form = DetailTypeCreationForm()
 
     if form.validate_on_submit():
+        if dt.id != form.string_id.data:
+            dt.id = form.string_id.data
         dt.name = yaml_to_sentence(form.name.data, dt.name)
         dt.description = (
             yaml_to_sentence(form.description.data, dt.description)
             if form.description.data
             else Sentence()
         )
-        dt.string_id = form.string_id.data
         dt.required = form.required.data
         db_sess.commit()
         return redirect(url_for("admin_bp.detail_management"))
@@ -150,7 +151,7 @@ def edit_detail_type(id):
     )
 
 
-@admin_bp.route("/detail_type/<int:id>/delete")
+@admin_bp.route("/detail_type/<id>/delete")
 @admin_required
 def delete_detail_type(id):
     db_sess = db_session.create_session()
