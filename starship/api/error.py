@@ -47,6 +47,11 @@ ERRORS = {
         "en": "Could not find detail with provided id",
         "ru": "Деталь с заданным id не найдена",
     },
+    "dc_not_found": {
+        "code": 404,
+        "en": "Could not find detail copy with provided identifier",
+        "ru": "Экземпляр детали с заданным идентификатором не найден",
+    },
     "dt_not_found": {
         "code": 404,
         "en": "Could not find detail type with provided identifier",
