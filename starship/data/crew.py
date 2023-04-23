@@ -1,6 +1,7 @@
 import sqlalchemy as sa
 
-from typing import Set
+from typing import List, Set
+from typing_extensions import Self
 from .db_session import SqlAlchemyBase
 from enum import Enum, auto
 
@@ -11,6 +12,9 @@ class Action(Enum):
     FoolGiveUp = auto()
     SmartGiveUp = auto()
     SelfDestruct = auto()
+
+    def as_response(self):
+        return self.name
 
 
 class Crew(SqlAlchemyBase):
@@ -44,3 +48,31 @@ class Crew(SqlAlchemyBase):
     @property
     def as_response(self):
         return {"name": self.name, "currency": self.currency}
+
+    @property
+    def opponent(self) -> Self | None:
+        """Returns crew's opponent, if there's one."""
+        if not self.combat:
+            return None
+        return self.combat.opponent_for(self)
+
+    @property
+    def available_actions(self) -> List[Action]:
+        if not self.active or not self.ship:
+            return []
+
+        actions = []
+
+        if self.ship.detail("weapon"):
+            actions.append(Action.Attack)
+
+        actions.append(Action.Dodge)
+
+        if self.ship.detail("void_shields"):
+            actions.append(Action.FoolGiveUp)
+
+        if self.ship.detail("warp_engine"):
+            actions.append(Action.SmartGiveUp)
+
+        if self.ship.detail("plasma_generator"):
+            actions.append(Action.SelfDestruct)

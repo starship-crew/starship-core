@@ -15,3 +15,14 @@ class Combat(SqlAlchemyBase):
 
     def __repr__(self):
         return f"Combat(crews={self.crews!r})"
+
+    def opponent_for(self, crew) -> Crew | None:
+        """Returns opponent's crew for the provided one or None, if there's
+        not."""
+
+        if not self.crews:
+            return None
+
+        for combat_crew in self.crews:
+            if combat_crew != crew:
+                return combat_crew

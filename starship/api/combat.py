@@ -24,6 +24,17 @@ class CombatResource(Resource):
             db_sess.commit()
             return {"action": "searching"}
 
+        opponent = crew.opponent
+        opponent_ship = (
+            opponent.ship.as_response if crew.ship.detail("sensors") else None
+        )
+
+        return {
+            "crew": opponent.as_response,
+            "ship": opponent_ship,
+            "actions": [action.as_response for action in crew.available_actions],
+        }
+
     def post(self):
         args = parser.parse_args()
         db_sess = db_session.create_session()
