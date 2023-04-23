@@ -1,10 +1,11 @@
+import random
+
 from multiprocessing import Process
 from time import sleep
 from starship.data import db_session
+from starship.data.action import ActionKind
 from starship.data.combat import Combat
-from starship.data.crew import Action, Crew
-
-from pprint import pprint
+from starship.data.crew import Crew
 
 
 def determine_first_actor(crew1, crew2):
@@ -58,13 +59,40 @@ def combat_connector():
         sleep(0.5)
 
 
+def apply_action(db_sess, crew, enemy):
+    match crew.action.kind:
+        case ActionKind.Attack:
+            weapon = crew.ship.detail("weapon")
+
+            if part := crew.action.part:
+                part.health -= weapon.damage
+            else:
+                part = random.choice(enemy.ship.details)
+                part.health -= weapon.damage
+
+            if part.health < 0:
+                part.health = 0
+        case ActionKind.Dodge:
+            raise NotImplementedError
+        case ActionKind.FoolGiveUp:
+            raise NotImplementedError
+        case ActionKind.SmartGiveUp:
+            raise NotImplementedError
+        case ActionKind.SelfDestruct:
+            raise NotImplementedError
+
+
 def combat_action_handler():
     """Constantly handles actions of different crews in a combat."""
     db_sess = db_session.create_session()
 
     while True:
-        for crew in db_sess.query(Crew).filter(Crew.active, Crew.action == None):
-            pass
+        for crew in db_sess.query(Crew).filter(Crew.active, Crew.action != None):
+            opponent = crew.opponent()
+            apply_action(db_sess, crew, opponent)
+            crew.active = False
+            opponent.active = True
+            db_sess.commit()
         sleep(0.5)
 
 
