@@ -1,13 +1,15 @@
 import sqlalchemy as sa
 import os
 
+import sqlalchemy.ext.declarative as dec
 import sqlalchemy.orm as orm
 from sqlalchemy.orm import Session
-import sqlalchemy.ext.declarative as dec
+from sqlalchemy.orm.scoping import ScopedSession
 
 SqlAlchemyBase = dec.declarative_base()
 
 __factory = None
+engine = None
 
 POSTGRES_HOST_FALLBACK = "localhost"
 POSTGRES_USER_FALLBACK = "root"
@@ -32,6 +34,7 @@ def get_db_url():
 
 def global_init():
     global __factory
+    global engine
 
     if __factory:
         return
@@ -51,6 +54,17 @@ def remove():
         __factory.close_all()
 
 
+def make_thread_safe():
+    if engine:
+        engine.dispose()
+    remove()
+
+
 def create_session() -> Session:
     global __factory
     return __factory()
+
+
+def create_scoped_session() -> ScopedSession:
+    global __factory
+    return orm.scoped_session(__factory)()

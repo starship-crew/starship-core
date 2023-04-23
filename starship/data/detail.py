@@ -1,6 +1,5 @@
 import yaml
 import sqlalchemy as sa
-from starship.data.detail_copy import DetailCopy
 
 from starship.helpers import get_lang
 
@@ -12,7 +11,7 @@ class Detail(SqlAlchemyBase):
 
     id = sa.Column(sa.Integer, primary_key=True, autoincrement=True)
 
-    kind_id = sa.Column(sa.Integer, sa.ForeignKey("detail_types.id"))
+    kind_id = sa.Column(sa.String, sa.ForeignKey("detail_types.id"))
     kind = sa.orm.relationship("DetailType", foreign_keys=[kind_id])
 
     cost = sa.Column(sa.Integer, nullable=False)

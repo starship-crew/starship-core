@@ -9,7 +9,7 @@
     </div>
     <div class="d-flex flex-wrap">
         {% for detail_type in detail_types %}
-            <div class="card me-2 mb-2" style="width: 18rem;">
+            <div class="card me-2 mb-2" style="width: 20rem;">
                 <div class="card-body d-flex flex-column justify-content-between">
                     <h5 class="card-title text-center {% if detail_type.required %}text-warning{% endif %}"
                         {% if detail_type.required %}
@@ -30,7 +30,7 @@
                                 <a href="{{url_for('admin_bp.change_detail_type_order', id=detail_type.id, direction='down')}}" class="btn btn-sm btn-outline-success">→</a>
                             {% endif %}
                         </div>
-                        <a href="#" onclick="deleteDetailType({{detail_type.id}}, '{{detail_type.name.get(lang)}}')" class="card-link">Delete</a>
+                        <a href="#" onclick="deleteDetailType('{{detail_type.id}}', '{{detail_type.name.get(lang)}}')" class="card-link">Delete</a>
                     </div>
                 </div>
             </div>
@@ -42,7 +42,7 @@
             <h3 class="mt-3">{{detail_type.name.get(lang)}}</h3>
             <div class="d-flex flex-wrap">
                 {% for detail in details %}
-                    <div class="card me-2 mb-2" style="width: 18rem;">
+                    <div class="card me-2 mb-2" style="width: 20rem;">
                         <div class="card-body d-flex flex-column justify-content-between">
                             <div>
                                 <h5 class="card-title text-center">{{detail.name.get(lang)}}</h6>

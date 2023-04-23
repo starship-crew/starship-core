@@ -13,9 +13,9 @@ from starship.admin.helpers import YamlValidator
 
 
 class DetailTypeCreationForm(FlaskForm):
+    string_id = StringField("String identifier", validators=[DataRequired()])
     name = TextAreaField("Name", validators=[DataRequired(), YamlValidator()])
     description = TextAreaField("Description", validators=[YamlValidator()])
-    string_id = StringField("String identifier", validators=[DataRequired()])
     required = BooleanField("Required by any ship to work", default=False)
     submit = SubmitField("Create")
 
@@ -24,15 +24,16 @@ DEFAULT_DETAIL_CHARS_TEXTAREA_VALUE = """power_generation: 0
 power_consumption: 0
 accel_factor: 0.0
 damage_absorption: 0
-damage: 0"""
+damage: 0
+stability: 0.0
+mobility: 0.0
+detail_limit: 0"""
 
 
 class DetailCreationForm(FlaskForm):
     name = TextAreaField("Name", validators=[DataRequired(), YamlValidator()])
     description = TextAreaField("Description", validators=[YamlValidator()])
-    kind = SelectField(
-        "Type", validate_choice=False, coerce=int, validators=[DataRequired()]
-    )
+    kind = SelectField("Type", validate_choice=False, validators=[DataRequired()])
     cost = IntegerField("Cost (set to 0 to mark detail as a starter one)", default=0)
     health = IntegerField("Health", default=0)
     chars = TextAreaField(

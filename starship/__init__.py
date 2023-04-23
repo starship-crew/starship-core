@@ -1,5 +1,6 @@
 import os
 
+from . import combat
 from .data import db_session
 
 from flask import Flask
@@ -45,8 +46,8 @@ def make_app():
         db_session.remove()
 
     app.config["SECRET_KEY"] = get_secret_key()
+    app.config["ERROR_404_HELP"] = False
 
-    db_session.global_init()
     login_manager.init_app(app)
 
     with app.app_context():

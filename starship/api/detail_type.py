@@ -1,15 +1,13 @@
 from . import error
 from starship.data import db_session
 from starship.data.detail_type import DetailType
-from starship.data.sentence import Sentence
 from starship.helpers import get_crew, get_detail_types, get_lang
 from .blueprint import api
-from flask_restx import Resource, reqparse, inputs
+from flask_restx import Resource, reqparse
 
 parser = reqparse.RequestParser()
 parser.add_argument("token", required=True)
-parser.add_argument("id", required=False, type=inputs.natural)
-parser.add_argument("string_id", required=False, type=str)
+parser.add_argument("id", required=False, type=str)
 parser.add_argument("key", required=False, type=str, default="none")
 
 
@@ -25,14 +23,7 @@ class DetailTypeResource(Resource):
         if not (args["id"] or args["string_id"]):
             return error.response("dt_not_found")
 
-        if not (
-            dt := db_sess.query(DetailType)
-            .filter(
-                (DetailType.id == args["id"])
-                | (DetailType.string_id == args["string_id"])
-            )
-            .first()
-        ):
+        if not (dt := db_sess.query(DetailType).filter_by(id=args["id"]).first()):
             return error.response("dt_not_found")
 
         return dt.as_response

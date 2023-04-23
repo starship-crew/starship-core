@@ -1,4 +1,4 @@
-{% if detail.power_generation or detail.power_consumption or detail.accel_factor or detail.damage_absorption or detail.damage %}
+{% if detail.power_generation or detail.power_consumption or detail.accel_factor or detail.damage_absorption or detail.damage or detail.stability or detail.mobility or detail.detail_limit %}
 <div class="card mt-2">
     <ul class="list-group list-group-flush">
         {% if detail.power_generation %}
@@ -41,6 +41,27 @@
         <li class="list-group-item d-flex justify-content-between">
             <span>Damage</span>
             <span class="badge bg-info">{{detail.damage}}</span>
+        </li>
+        {% endif %}
+
+        {% if detail.stability %}
+        <li class="list-group-item d-flex justify-content-between">
+            <span>Stability</span>
+            <span class="badge bg-info">{{detail.stability}}</span>
+        </li>
+        {% endif %}
+
+        {% if detail.mobility %}
+        <li class="list-group-item d-flex justify-content-between">
+            <span>Mobility</span>
+            <span class="badge bg-info">{{detail.mobility}}</span>
+        </li>
+        {% endif %}
+
+        {% if detail.detail_limit %}
+        <li class="list-group-item d-flex justify-content-between">
+            <span>Detail limit</span>
+            <span class="badge bg-info">{{detail.detail_limit}}</span>
         </li>
         {% endif %}
     </ul>
