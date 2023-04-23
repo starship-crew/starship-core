@@ -62,6 +62,11 @@ ERRORS = {
         "en": "Detail type does not have such attribute",
         "ru": "Вид детали не имеет данного атрибута",
     },
+    "dt_key_attr_error": {
+        "code": 404,
+        "en": "Detail type does not have such attribute",
+        "ru": "Вид детали не имеет данного атрибута",
+    },
 }
 
 
