@@ -41,7 +41,9 @@ class DetailCopy(SqlAlchemyBase):
 
     @property
     def repair_cost(self):
-        return int(self.cost * 0.1)
+        if self.health == self.max_health:
+            return 0
+        return self.upgrade_cost // 3
 
     @property
     def name(self):
