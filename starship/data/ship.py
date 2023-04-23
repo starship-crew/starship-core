@@ -85,7 +85,7 @@ class Ship(SqlAlchemyBase):
             "detail_limit": self.detail_limit,
         }
 
-    def detail(self, detail_type_string_id):
+    def detail(self, detail_type_id):
         """Checks whether ship has a detail with the type provided and if it
         does, it returns its model"""
 
@@ -95,6 +95,6 @@ class Ship(SqlAlchemyBase):
             .filter_by(ship=self)
             .join(DetailCopy.kind)
             .join(Detail.kind)
-            .filter(DetailType.string_id == detail_type_string_id)
+            .filter(DetailType.id == detail_type_id)
             .first()
         )
