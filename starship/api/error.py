@@ -72,6 +72,11 @@ ERRORS = {
         "en": "Could not find detail copy with provided identifier and linked with the enemy ship",
         "ru": "Экземпляр детали с заданным идентификатором и связанный с кораблем соперника не найден",
     },
+    "already_acted": {
+        "code": 409,
+        "en": "Crew has already acted",
+        "ru": "Экипаж уже походил",
+    },
 }
 
 

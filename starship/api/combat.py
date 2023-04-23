@@ -44,13 +44,16 @@ class CombatResource(Resource):
         if not args["action"]:
             return error.response("action_argument_not_provided")
 
+        if not (crew := get_crew(db_sess, args["token"])):
+            return error.response("crew_not_found")
+
+        if crew.action is not None:
+            return error.response("already_acted")
+
         try:
             kind = ActionKind[args["action"]]
         except KeyError:
             return error.response("action_argument_wrong")
-
-        if not (crew := get_crew(db_sess, args["token"])):
-            return error.response("crew_not_found")
 
         if (
             args["part"]
