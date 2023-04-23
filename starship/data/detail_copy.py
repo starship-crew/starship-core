@@ -106,6 +106,38 @@ class DetailCopy(SqlAlchemyBase):
             return self.garage.crew
 
     @property
+    def power_generation(self):
+        return self.kind.power_generation
+
+    @property
+    def power_consumption(self):
+        return self.kind.power_consumption
+
+    @property
+    def accel_factor(self):
+        return self.kind.accel_factor
+
+    @property
+    def damage_absorption(self):
+        return self.kind.damage_absorption
+
+    @property
+    def damage(self):
+        return self.kind.damage
+
+    @property
+    def stability(self):
+        return self.kind.stability
+
+    @property
+    def mobility(self):
+        return self.kind.mobility
+
+    @property
+    def detail_limit(self):
+        return self.kind.detail_limit
+
+    @property
     def as_response(self):
         lang = get_lang()
         return {
@@ -122,11 +154,12 @@ class DetailCopy(SqlAlchemyBase):
             "cost": self.cost,
             "upgrade_cost": self.upgrade_cost,
             "repair_cost": self.repair_cost,
-            "power_generation": self.kind.power_generation,
-            "power_consumption": self.kind.power_consumption,
-            "accel_factor": self.kind.accel_factor,
-            "mobility": self.kind.mobility,
-            "stability": self.kind.stability,
-            "damage_absorption": self.kind.damage_absorption,
-            "damage": self.kind.damage,
+            "power_generation": self.power_generation,
+            "power_consumption": self.power_consumption,
+            "accel_factor": self.accel_factor,
+            "mobility": self.mobility,
+            "stability": self.stability,
+            "damage_absorption": self.damage_absorption,
+            "damage": self.damage,
+            "detail_limit": self.detail_limit,
         }
