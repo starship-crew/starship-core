@@ -40,6 +40,10 @@ class DetailCopy(SqlAlchemyBase):
         return 10 * self.level
 
     @property
+    def repair_cost(self):
+        return int(self.cost * 0.1)
+
+    @property
     def name(self):
         return self.kind.name
 
@@ -115,6 +119,7 @@ class DetailCopy(SqlAlchemyBase):
             "level": self.level,
             "cost": self.cost,
             "upgrade_cost": self.upgrade_cost,
+            "repair_cost": self.repair_cost,
             "power_generation": self.kind.power_generation,
             "power_consumption": self.kind.power_consumption,
             "accel_factor": self.kind.accel_factor,

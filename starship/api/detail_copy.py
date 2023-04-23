@@ -54,6 +54,12 @@ class DetailCopyResource(Resource):
 
                 dc.crew.currency -= dc.upgrade_cost
                 dc.level += 1
+            case "repair":
+                if dc.crew.currency < dc.repair_cost:
+                    return error.response("not_enough_currency")
+
+                dc.crew.currency -= dc.repair_cost
+                dc.health = dc.max_health
             case _:
                 return error.response("action_argument_wrong")
 
