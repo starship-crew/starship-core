@@ -27,7 +27,7 @@ def make_combat(sess, crew1, crew2):
     crew2.combat = combat
 
     sess.add(combat)
-    db_sess.commit()
+    sess.commit()
 
 
 def combat_connector():

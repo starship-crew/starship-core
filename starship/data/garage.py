@@ -31,12 +31,13 @@ class Garage(SqlAlchemyBase):
             db_sess, lambda q, dt: q.filter(DetailCopy.garage == self)
         )
 
-    @property
-    def as_response(self):
+    def as_response(self, db_sess):
         return {
-            "detail_types": [dt.as_response for dt in self.ordered_details.keys()],
+            "detail_types": [
+                dt.as_response for dt in self.ordered_details(db_sess).keys()
+            ],
             "detail_copies": {
                 dt.id: [detail.as_response for detail in details]
-                for dt, details in self.ordered_details.items()
+                for dt, details in self.ordered_details(db_sess).items()
             },
         }

@@ -20,4 +20,4 @@ class GarageResource(Resource):
             if not crew.garage:
                 return error.response("garage_not_linked")
 
-            return crew.garage.as_response
+            return crew.garage.as_response(db_sess)
