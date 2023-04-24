@@ -41,7 +41,7 @@ def global_init():
 
     engine = sa.create_engine(get_db_url(), echo=False)
     engine.update_execution_options(connect_args={"connect_timeout": 5})
-    factory = orm.sessionmaker(bind=engine, autocommit=False, autoflush=False)
+    factory = orm.sessionmaker(bind=engine)
 
     from . import __all_models
 
