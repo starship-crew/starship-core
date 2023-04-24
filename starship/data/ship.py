@@ -29,7 +29,7 @@ class Ship(SqlAlchemyBase):
     crew = sa.orm.relationship("Crew", back_populates="ship", foreign_keys=[crew_id])
 
     details: sa.orm.Mapped[List["DetailCopy"]] = sa.orm.relationship(
-        secondary="detail_copy_groups"
+        back_populates="ship"
     )
 
     def __repr__(self):

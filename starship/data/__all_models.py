@@ -4,10 +4,8 @@ from . import crew_groups
 from . import garage
 from . import ship
 from . import detail_copy
-from . import detail_copy_groups
 from . import detail
 from . import detail_type
-from . import garage_groups
 from . import sentence
 from . import combat
 from . import action

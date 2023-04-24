@@ -21,6 +21,7 @@ def garage(id):
             "garage.html",
             title=f"Garage {garage.id}",
             garage=garage,
+            ordered_details=garage.ordered_details(db_sess),
             lang=get_lang(),
         )
 

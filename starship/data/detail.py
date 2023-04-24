@@ -12,7 +12,7 @@ class Detail(SqlAlchemyBase):
     id = sa.Column(sa.Integer, primary_key=True, autoincrement=True)
 
     kind_id = sa.Column(sa.String, sa.ForeignKey("detail_types.id"))
-    kind = sa.orm.relationship("DetailType", foreign_keys=[kind_id])
+    kind = sa.orm.relationship("DetailType", foreign_keys=[kind_id], lazy="subquery")
 
     cost = sa.Column(sa.Integer, nullable=False)
     health = sa.Column(sa.Integer, nullable=False)

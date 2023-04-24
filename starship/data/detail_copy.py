@@ -17,7 +17,7 @@ class DetailCopy(SqlAlchemyBase):
     garage = sa.orm.relationship("Garage", foreign_keys=[garage_id])
 
     kind_id = sa.Column(sa.Integer, sa.ForeignKey("details.id"))
-    kind = sa.orm.relationship("Detail", foreign_keys=[kind_id])
+    kind = sa.orm.relationship("Detail", foreign_keys=[kind_id], lazy="subquery")
 
     health = sa.Column(sa.Integer, nullable=False)
     level = sa.Column(sa.Integer, default=1)
@@ -73,16 +73,18 @@ class DetailCopy(SqlAlchemyBase):
 
     def put_on(self):
         if self.garage:
-            self.ship = self.garage.crew.ship
-
             # If there's a detail with the same type as this, it must be put off
             # from the ship before putting on
             if dc := next(
-                filter(lambda dc: dc.kind.kind == self.kind.kind, self.ship.details),
+                filter(
+                    lambda dc: dc.kind.kind == self.kind.kind,
+                    self.garage.crew.ship.details,
+                ),
                 None,
             ):
                 dc.put_off()
 
+            self.ship = self.garage.crew.ship
             self.ship.details.append(self)
             self.garage.details.remove(self)
             self.garage = None

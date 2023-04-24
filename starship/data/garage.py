@@ -20,18 +20,16 @@ class Garage(SqlAlchemyBase):
     crew = sa.orm.relationship("Crew", back_populates="garage", foreign_keys=[crew_id])
 
     details: sa.orm.Mapped[List["DetailCopy"]] = sa.orm.relationship(
-        secondary="garage_groups"
+        back_populates="garage"
     )
 
     def __repr__(self):
         return f"Garage(id={self.id!r}, details={self.details})"
 
-    @property
-    def ordered_details(self) -> OrderedDict[DetailType, DetailCopy]:
-        with db.session() as db_sess:
-            return get_ordered_detail_copies(
-                db_sess, lambda q, dt: q.filter(DetailCopy.garage == self)
-            )
+    def ordered_details(self, db_sess) -> OrderedDict[DetailType, DetailCopy]:
+        return get_ordered_detail_copies(
+            db_sess, lambda q, dt: q.filter(DetailCopy.garage == self)
+        )
 
     @property
     def as_response(self):

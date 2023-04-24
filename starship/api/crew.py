@@ -24,25 +24,25 @@ CREW_TOKEN_LENGTH = 32
 def create_crew(name):
     token = secrets.token_urlsafe(CREW_TOKEN_LENGTH)
 
-    ship = Ship()
-
-    starter_details = db_sess.query(Detail).filter_by(cost=0)
-    for detail in starter_details:
-        detail_copy = DetailCopy()
-        detail_copy.ship = ship
-        detail_copy.kind = detail
-        detail_copy.health = detail.health
-        ship.details.append(detail_copy)
-
-    garage = Garage()
-
-    crew = Crew()
-    crew.token = token
-    crew.name = name
-    crew.ship = ship
-    crew.garage = garage
-
     with db.session() as db_sess:
+        ship = Ship()
+
+        starter_details = db_sess.query(Detail).filter_by(cost=0)
+        for detail in starter_details:
+            detail_copy = DetailCopy()
+            detail_copy.ship = ship
+            detail_copy.kind = detail
+            detail_copy.health = detail.health
+            ship.details.append(detail_copy)
+
+        garage = Garage()
+
+        crew = Crew()
+        crew.token = token
+        crew.name = name
+        crew.ship = ship
+        crew.garage = garage
+
         db_sess.add(crew)
         db_sess.commit()
 
