@@ -4,7 +4,7 @@ from sqlalchemy.orm import Mapped, relationship
 
 from starship.data.crew import Crew
 
-from .db_session import SqlAlchemyBase
+from .db import SqlAlchemyBase
 
 
 class Combat(SqlAlchemyBase):

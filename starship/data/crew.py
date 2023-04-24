@@ -4,7 +4,7 @@ from typing import List, Set
 from typing_extensions import Self
 
 from starship.data.action import ActionKind
-from .db_session import SqlAlchemyBase
+from .db import SqlAlchemyBase
 
 
 class Crew(SqlAlchemyBase):

@@ -1,10 +1,10 @@
+from contextlib import contextmanager
 import sqlalchemy as sa
 import os
 
 import sqlalchemy.ext.declarative as dec
 import sqlalchemy.orm as orm
 from sqlalchemy.orm import Session
-from sqlalchemy.orm.scoping import ScopedSession
 
 SqlAlchemyBase = dec.declarative_base()
 
@@ -41,7 +41,7 @@ def global_init():
 
     engine = sa.create_engine(get_db_url(), echo=False)
     engine.update_execution_options(connect_args={"connect_timeout": 5})
-    __factory = orm.sessionmaker(bind=engine)
+    __factory = orm.sessionmaker(bind=engine, autocommit=False, autoflush=False)
 
     from . import __all_models
 
@@ -60,11 +60,13 @@ def make_thread_safe():
     remove()
 
 
-def create_session() -> Session:
+@contextmanager
+def session() -> Session:
     global __factory
-    return __factory()
-
-
-def create_scoped_session() -> ScopedSession:
-    global __factory
-    return orm.scoped_session(__factory)()
+    sess = __factory()
+    try:
+        yield sess
+    except Exception:
+        sess.rollback()
+    finally:
+        sess.close()

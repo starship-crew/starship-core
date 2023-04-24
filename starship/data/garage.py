@@ -7,8 +7,8 @@ from starship.data.detail_copy import DetailCopy
 from starship.data.detail_type import DetailType
 from starship.helpers import get_ordered_detail_copies
 
-from . import db_session
-from .db_session import SqlAlchemyBase
+from . import db
+from .db import SqlAlchemyBase
 
 
 class Garage(SqlAlchemyBase):
@@ -28,10 +28,10 @@ class Garage(SqlAlchemyBase):
 
     @property
     def ordered_details(self) -> OrderedDict[DetailType, DetailCopy]:
-        return get_ordered_detail_copies(
-            db_session.create_session(),
-            lambda q, dt: q.filter(DetailCopy.garage == self),
-        )
+        with db.session() as db_sess:
+            return get_ordered_detail_copies(
+                db_sess, lambda q, dt: q.filter(DetailCopy.garage == self)
+            )
 
     @property
     def as_response(self):

@@ -1,6 +1,6 @@
 import sqlalchemy as sa
 
-from .db_session import SqlAlchemyBase
+from .db import SqlAlchemyBase
 
 
 garage_groups = sa.Table(

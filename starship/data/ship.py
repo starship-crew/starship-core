@@ -6,8 +6,8 @@ from starship.data.detail import Detail
 from starship.data.detail_copy import DetailCopy
 from starship.data.detail_type import DetailType
 
-from . import db_session
-from .db_session import SqlAlchemyBase
+from . import db
+from .db import SqlAlchemyBase
 
 
 class Ship(SqlAlchemyBase):
@@ -95,12 +95,12 @@ class Ship(SqlAlchemyBase):
         """Checks whether ship has a detail with the type provided and if it
         does, it returns its model"""
 
-        db_sess = db_session.create_session()
-        return (
-            db_sess.query(DetailCopy)
-            .filter_by(ship=self)
-            .join(DetailCopy.kind)
-            .join(Detail.kind)
-            .filter(DetailType.id == detail_type_id)
-            .first()
-        )
+        with db.session() as db_sess:
+            return (
+                db_sess.query(DetailCopy)
+                .filter_by(ship=self)
+                .join(DetailCopy.kind)
+                .join(Detail.kind)
+                .filter(DetailType.id == detail_type_id)
+                .first()
+            )

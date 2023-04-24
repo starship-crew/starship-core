@@ -3,7 +3,7 @@ import secrets
 
 from starship.helpers import get_crew
 from . import error
-from starship.data import db_session
+from starship.data import db
 from starship.data.crew import Crew
 from starship.data.detail import Detail
 from starship.data.detail_copy import DetailCopy
@@ -23,7 +23,6 @@ CREW_TOKEN_LENGTH = 32
 
 def create_crew(name):
     token = secrets.token_urlsafe(CREW_TOKEN_LENGTH)
-    db_sess = db_session.create_session()
 
     ship = Ship()
 
@@ -43,8 +42,9 @@ def create_crew(name):
     crew.ship = ship
     crew.garage = garage
 
-    db_sess.add(crew)
-    db_sess.commit()
+    with db.session() as db_sess:
+        db_sess.add(crew)
+        db_sess.commit()
 
     return token
 
@@ -62,9 +62,9 @@ class CrewResource(Resource):
 
     def get(self):
         args = parser.parse_args()
-        db_sess = db_session.create_session()
 
-        if not (crew := get_crew(db_sess, args["token"])):
-            return error.response("crew_not_found")
+        with db.session() as db_sess:
+            if not (crew := get_crew(db_sess, args["token"])):
+                return error.response("crew_not_found")
 
-        return crew.as_response
+            return crew.as_response

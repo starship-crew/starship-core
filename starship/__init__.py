@@ -1,7 +1,7 @@
 import os
 
 from . import combat
-from .data import db_session
+from .data import db
 
 from flask import Flask
 from flask_login import LoginManager
@@ -25,14 +25,14 @@ def create_inital_admin():
 
     from .data.user import User
 
-    db_sess = db_session.create_session()
-    if not db_sess.query(User).filter(User.login == "admin").first():
-        admin_user = User()
-        admin_user.login = "admin"
-        admin_user.set_password(get_initial_admin_password())
-        admin_user.is_admin = True
-        db_sess.add(admin_user)
-        db_sess.commit()
+    with db.session() as sess:
+        if not sess.query(User).filter(User.login == "admin").first():
+            admin_user = User()
+            admin_user.login = "admin"
+            admin_user.set_password(get_initial_admin_password())
+            admin_user.is_admin = True
+            sess.add(admin_user)
+            sess.commit()
 
 
 def make_app():
@@ -43,7 +43,7 @@ def make_app():
 
     @app.teardown_appcontext
     def shutdown_session(exception=None):
-        db_session.remove()
+        db.remove()
 
     app.config["SECRET_KEY"] = get_secret_key()
     app.config["ERROR_404_HELP"] = False

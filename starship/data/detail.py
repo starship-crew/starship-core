@@ -3,7 +3,7 @@ import sqlalchemy as sa
 
 from starship.helpers import get_lang
 
-from .db_session import SqlAlchemyBase
+from .db import SqlAlchemyBase
 
 
 class Detail(SqlAlchemyBase):

@@ -2,7 +2,7 @@ import sqlalchemy as sa
 
 from enum import Enum, auto
 
-from .db_session import SqlAlchemyBase
+from .db import SqlAlchemyBase
 
 
 class ActionKind(Enum):

@@ -1,5 +1,5 @@
 from starship.data.user import User
-from starship.data import db_session
+from starship.data import db
 from .blueprint import admin_bp
 from .forms.user import LoginForm
 from .helpers import redirect_url
@@ -17,13 +17,13 @@ def login():
     form = LoginForm()
 
     if form.validate_on_submit():
-        db_sess = db_session.create_session()
-        user = db_sess.query(User).filter_by(login=form.login.data).first()
+        with db.session() as db_sess:
+            user = db_sess.query(User).filter_by(login=form.login.data).first()
 
-        if user and user.check_password(form.password.data):
-            login_user(user, remember=form.remember_me.data)
+            if user and user.check_password(form.password.data):
+                login_user(user, remember=form.remember_me.data)
 
-            return redirect(redirect_url("admin_bp.dashboard"))
+                return redirect(redirect_url("admin_bp.dashboard"))
 
         flash("Invalid login/password")
 
@@ -41,9 +41,9 @@ def logout():
 
 @login_manager.user_loader
 def load_user(user_id):
-    db_sess = db_session.create_session()
-    if user_id is not None:
-        return db_sess.query(User).get(user_id)
+    with db.session() as db_sess:
+        if user_id is not None:
+            return db_sess.query(User).get(user_id)
 
 
 @login_manager.unauthorized_handler

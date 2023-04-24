@@ -1,5 +1,5 @@
 from . import error
-from starship.data import db_session
+from starship.data import db
 from starship.data.detail_type import DetailType
 from starship.helpers import get_crew, get_detail_types, get_lang
 from .blueprint import api
@@ -15,18 +15,18 @@ parser.add_argument("key", required=False, type=str, default="none")
 class DetailTypeResource(Resource):
     def get(self):
         args = parser.parse_args()
-        db_sess = db_session.create_session()
 
-        if not (crew := get_crew(db_sess, args["token"])):
-            return error.response("crew_not_found")
+        with db.session() as db_sess:
+            if not (crew := get_crew(db_sess, args["token"])):
+                return error.response("crew_not_found")
 
-        if not (args["id"] or args["string_id"]):
-            return error.response("dt_not_found")
+            if not (args["id"] or args["string_id"]):
+                return error.response("dt_not_found")
 
-        if not (dt := db_sess.query(DetailType).filter_by(id=args["id"]).first()):
-            return error.response("dt_not_found")
+            if not (dt := db_sess.query(DetailType).filter_by(id=args["id"]).first()):
+                return error.response("dt_not_found")
 
-        return dt.as_response
+            return dt.as_response
 
 
 def convert_key(dt, key):
@@ -48,15 +48,15 @@ def convert_key(dt, key):
 class DetailTypeListResource(Resource):
     def get(self):
         args = parser.parse_args()
-        db_sess = db_session.create_session()
 
-        if not (crew := get_crew(db_sess, args["token"])):
-            return error.response("crew_not_found")
+        with db.session() as db_sess:
+            if not (crew := get_crew(db_sess, args["token"])):
+                return error.response("crew_not_found")
 
-        if args["key"] == "none":
-            return [dt.as_response for dt in get_detail_types(db_sess)]
+            if args["key"] == "none":
+                return [dt.as_response for dt in get_detail_types(db_sess)]
 
-        return {
-            convert_key(dt, args["key"]): dt.as_response
-            for dt in get_detail_types(db_sess)
-        }
+            return {
+                convert_key(dt, args["key"]): dt.as_response
+                for dt in get_detail_types(db_sess)
+            }
