@@ -40,6 +40,7 @@ class CombatResource(Resource):
             "ship": opponent_ship,
             "actions": [action.as_response for action in crew.available_actions],
             "action_comment": action_comment,
+            "won": crew.won,
         }
 
     def post(self):

@@ -56,6 +56,13 @@ class Crew(SqlAlchemyBase):
         return self.combat.opponent_for(self)
 
     @property
+    def won(self) -> bool | None:
+        """Returns whether crew has won the combat."""
+        if not self.combat or (self.ship.health > 0 and self.opponent.ship.health > 0):
+            return None
+        return self.opponent.ship.health <= 0
+
+    @property
     def available_actions(self) -> List[ActionKind]:
         if not self.active or not self.ship:
             return []
