@@ -1,4 +1,5 @@
-.docker_data
-.gitignore
+.secrets
+.git*
 Dockerfile
 LICENSE
+alembic*
