@@ -28,6 +28,14 @@ class Crew(SqlAlchemyBase):
     action_id = sa.Column(sa.Integer, sa.ForeignKey("actions.id"))
     action = sa.orm.relationship("Action", back_populates="crew")
 
+    action_comment_id = sa.Column(sa.Integer, sa.ForeignKey("sentences.id"))
+    action_comment = sa.orm.relationship(
+        "Sentence",
+        foreign_keys=[action_comment_id],
+        cascade="all, delete-orphan",
+        single_parent=True,
+    )
+
     owners: sa.orm.Mapped[Set["User"]] = sa.orm.relationship(
         secondary="crew_groups",
         back_populates="crews",

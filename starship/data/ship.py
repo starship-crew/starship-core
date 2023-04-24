@@ -23,6 +23,8 @@ class Ship(SqlAlchemyBase):
         single_parent=True,
     )
 
+    enhanced_mobility = sa.Column(sa.Float, default=0.0)
+
     crew_id = sa.Column(sa.Integer, sa.ForeignKey("crews.id"))
     crew = sa.orm.relationship("Crew", back_populates="ship", foreign_keys=[crew_id])
 
@@ -67,7 +69,11 @@ class Ship(SqlAlchemyBase):
 
     @property
     def mobility(self) -> float:
-        return sum(map(lambda d: d.kind.mobility, self.details))
+        if self.enhanced_mobility == None:
+            self.enhanced_mobility = 0.0
+        return (
+            sum(map(lambda d: d.kind.mobility, self.details)) + self.enhanced_mobility
+        )
 
     @property
     def as_response(self):

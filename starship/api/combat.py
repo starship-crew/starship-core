@@ -2,7 +2,7 @@ from starship.data.action import Action, ActionKind
 from starship.data.detail_copy import DetailCopy
 from . import error
 from starship.data import db_session
-from starship.helpers import get_crew
+from starship.helpers import get_crew, get_lang
 from .blueprint import api
 from flask_restx import Resource, reqparse, inputs
 
@@ -31,10 +31,15 @@ class CombatResource(Resource):
             opponent.ship.as_response if crew.ship.detail("sensors") else None
         )
 
+        action_comment = (
+            crew.action_comment.get(get_lang()) if crew.action_comment else None
+        )
+
         return {
             "crew": opponent.as_response,
             "ship": opponent_ship,
             "actions": [action.as_response for action in crew.available_actions],
+            "last_action_comment": action_comment,
         }
 
     def post(self):

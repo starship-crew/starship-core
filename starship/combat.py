@@ -6,6 +6,8 @@ from starship.data import db_session
 from starship.data.action import ActionKind
 from starship.data.combat import Combat
 from starship.data.crew import Crew
+from starship.data.sentence import Sentence
+from starship.helpers import get_lang
 
 
 def determine_first_actor(crew1, crew2):
@@ -59,21 +61,45 @@ def combat_connector():
         sleep(0.5)
 
 
+def has_hit(enemy_mobility):
+    """Returns whether has hit with the chance constructed from enemy mobility."""
+    misfire_chance = enemy_mobility
+    hit_chance = 1 - enemy_mobility
+    return random.choices([False, True], weights=[misfire_chance, hit_chance])
+
+
 def apply_action(db_sess, crew, enemy):
     match crew.action.kind:
         case ActionKind.Attack:
             weapon = crew.ship.detail("weapon")
 
-            if part := crew.action.part:
-                part.health -= weapon.damage
-            else:
-                part = random.choice(enemy.ship.details)
-                part.health -= weapon.damage
+            if has_hit(enemy.ship.mobility):
+                if part := crew.action.part:
+                    part.health -= weapon.damage
+                    part_name = part.name.get(get_lang())
+                    crew.action_comment = Sentence(
+                        ru=f"{part_name} корабля соперника был(и) повреждены",
+                        en=f"{part_name} of the enemy's ship was damaged",
+                    )
+                else:
+                    part = random.choice(enemy.ship.details)
+                    part.health -= weapon.damage
+                    crew.action_comment = Sentence(
+                        ru="Вы нанесли урон кораблю соперника",
+                        en="You has damaged the enemy",
+                    )
 
-            if part.health < 0:
-                part.health = 0
+                if part.health < 0:
+                    part.health = 0
+            else:
+                crew.action_comment = Sentence(
+                    ru="Вы промахнулись",
+                    en="You has misfired",
+                )
+
+            enemy.ship.enhanced_mobility = 0.0
         case ActionKind.Dodge:
-            raise NotImplementedError
+            crew.ship.enhanced_mobility += 0.2
         case ActionKind.FoolGiveUp:
             raise NotImplementedError
         case ActionKind.SmartGiveUp:
