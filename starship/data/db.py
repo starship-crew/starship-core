@@ -1,4 +1,4 @@
-from contextlib import contextmanager
+from contextlib import AbstractContextManager, contextmanager
 import sqlalchemy as sa
 import os
 
@@ -8,7 +8,7 @@ from sqlalchemy.orm import Session
 
 SqlAlchemyBase = dec.declarative_base()
 
-__factory = None
+factory = None
 engine = None
 
 POSTGRES_HOST_FALLBACK = "localhost"
@@ -33,15 +33,15 @@ def get_db_url():
 
 
 def global_init():
-    global __factory
+    global factory
     global engine
 
-    if __factory:
+    if factory:
         return
 
     engine = sa.create_engine(get_db_url(), echo=False)
     engine.update_execution_options(connect_args={"connect_timeout": 5})
-    __factory = orm.sessionmaker(bind=engine, autocommit=False, autoflush=False)
+    factory = orm.sessionmaker(bind=engine, autocommit=False, autoflush=False)
 
     from . import __all_models
 
@@ -49,9 +49,9 @@ def global_init():
 
 
 def remove():
-    global __factory
-    if __factory:
-        __factory.close_all()
+    global factory
+    if factory:
+        factory.close_all()
 
 
 def make_thread_safe():
@@ -60,13 +60,15 @@ def make_thread_safe():
     remove()
 
 
-@contextmanager
-def session() -> Session:
-    global __factory
-    sess = __factory()
-    try:
-        yield sess
-    except Exception:
-        sess.rollback()
-    finally:
-        sess.close()
+class session(AbstractContextManager):
+    def __init__(self):
+        global factory
+        self.session = factory()
+
+    def __enter__(self):
+        return self.session
+
+    def __exit__(self, exc_type, exc_value, traceback):
+        if exc_type:
+            self.session.rollback()
+        self.session.close()
