@@ -67,6 +67,9 @@ class Crew(SqlAlchemyBase):
         if not self.active or not self.ship:
             return []
 
+        if self.won is not None:
+            return [ActionKind.Quit]
+
         actions = []
 
         if self.ship.detail("weapon"):

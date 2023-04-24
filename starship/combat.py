@@ -106,6 +106,8 @@ def apply_action(db_sess, crew, enemy):
             raise NotImplementedError
         case ActionKind.SelfDestruct:
             raise NotImplementedError
+        case ActionKind.Quit:
+            crew.combat = None
 
 
 def combat_action_handler():
@@ -115,9 +117,10 @@ def combat_action_handler():
     while True:
         for crew in db_sess.query(Crew).filter(Crew.active, Crew.action != None):
             enemy = crew.opponent
-            apply_action(db_sess, crew, enemy)
             crew.active = False
             enemy.active = True
+            apply_action(db_sess, crew, enemy)
+            crew.action = None
             db_sess.commit()
         sleep(0.5)
 

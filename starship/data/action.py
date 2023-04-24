@@ -11,6 +11,7 @@ class ActionKind(Enum):
     FoolGiveUp = auto()
     SmartGiveUp = auto()
     SelfDestruct = auto()
+    Quit = auto()
 
     @property
     def as_response(self):
