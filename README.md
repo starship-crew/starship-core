@@ -1,18 +1,9 @@
 # Starship Command
+
 The REST API server for handling starship clients requests.
 
-Starship – текстовая экшн Telegram игра, задача игрока в которой – прокачка своего космического корабля и соревнование в боях с другими звездолётами.
+Starship is a text action Telegram game in which the main target of player is to consistently upgrade his starship and compete in combats with other ones.
 
+Technical specification for the project can be found [here](https://docs.google.com/document/d/1G6URBOew1XY_o6vuwBBKnyhgYMWYWzp2tFedxSK1CeE/edit?usp=sharing).
 
-Вот [тут](https://docs.google.com/document/d/1G6URBOew1XY_o6vuwBBKnyhgYMWYWzp2tFedxSK1CeE/edit?usp=sharing) можно посмотерть ТЗ проекта
-
-Чтобы запустить проект сделайте следоющите действия:
-1. клонируйте репозитоий
-2. создайете все необзодимые фалы в директории `.secrets` 
-4. установите `Docker` на свой компьютер
-3. два раза запустите команду 
-```bash
-docker compose up --build
-```
-
-Ура! по адрессу `http://localhost/dashboard` начинается мгаия
+Run `docker compose up --build` to build and run services. After that look at the http://localhost/dashboard page.
